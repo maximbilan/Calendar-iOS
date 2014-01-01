@@ -1,6 +1,6 @@
 //
 //  NSDate+CalendarView.m
-//  wymg
+//  ios_calendar
 //
 //  Created by Maxim on 10/9/13.
 //  Copyright (c) 2013 Maxim. All rights reserved.
