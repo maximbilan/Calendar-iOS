@@ -71,8 +71,10 @@ static const int CalendarViewMaxLinesCount  = 6;
 
 - (void)leftSwipe;
 - (void)rightSwipe;
-- (void)swipeMonth;
+- (void)fade;
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer;
+- (void)tap:(UITapGestureRecognizer *)recognizer;
+- (void)doubleTap:(UITapGestureRecognizer *)recognizer;
 
 - (void)changeDateEvent;
 
@@ -115,17 +117,46 @@ static const int CalendarViewMaxLinesCount  = 6;
     [self setup];
 }
 
+- (void)setMode:(NSInteger)m
+{
+    mode = m;
+    switch (mode) {
+        case CM_Default:
+            type = CTDay;
+            minType = CTDay;
+            break;
+        
+        case CM_MonthsAndYears:
+            type = CTMonth;
+            minType = CTMonth;
+            break;
+        
+        case CM_Years:
+            type = CTYear;
+            minType = CTYear;
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (void)setup
 {
     dayRects = [[NSMutableArray alloc] init];
     monthRects = [[NSMutableArray alloc] init];
     yearRects = [[NSMutableArray alloc] init];
     
+    yearTitleRect = CGRectMake(0, 0, 0, 0);
+    monthTitleRect = CGRectMake(0, 0, 0, 0);
+    
+    type = CTDay;
+    
+    [self setMode:CM_Default];
+    
     NSDate *now = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:now];
-    
-    type = CTDay;
     
     currentDay = [components day];
     currentMonth = [components month];
@@ -141,6 +172,14 @@ static const int CalendarViewMaxLinesCount  = 6;
     
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
     [self addGestureRecognizer:pinch];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    tap.numberOfTapsRequired = 1;
+    [self addGestureRecognizer:tap];
+    
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+    doubleTap.numberOfTapsRequired = 2;
+    [self addGestureRecognizer:doubleTap];
     
     [self generateDayRects];
     [self generateMonthRects];
@@ -284,13 +323,17 @@ static const int CalendarViewMaxLinesCount  = 6;
 	
 	NSString *year = [NSString stringWithFormat:@"%ld",(long)currentYear];
 	const CGFloat yearNameX = ( CalendarViewDayCellWidth - CGRectGetHeight( dayFontBoundingBox ) ) * 0.5f;
-	[year drawInRect:CGRectMake( yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight ) withAttributes:attributesRedLeft];
+    yearTitleRect = CGRectMake( yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight );
+	[year drawInRect:yearTitleRect withAttributes:attributesRedLeft];
 	
-	NSDateFormatter *formate = [NSDateFormatter new];
-    NSArray *monthNames = [formate standaloneMonthSymbols];
-    NSString *monthName = [monthNames objectAtIndex:( currentMonth - 1 )];
-	const CGFloat monthNameX = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - ( CalendarViewDayCellWidth - CGRectGetHeight( dayFontBoundingBox ) );
-	[monthName drawInRect:CGRectMake( monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight ) withAttributes:attributesRedRight];
+    if (mode!=CM_Years) {
+        NSDateFormatter *formate = [NSDateFormatter new];
+        NSArray *monthNames = [formate standaloneMonthSymbols];
+        NSString *monthName = [monthNames objectAtIndex:( currentMonth - 1 )];
+        const CGFloat monthNameX = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - ( CalendarViewDayCellWidth - CGRectGetHeight( dayFontBoundingBox ) );
+        monthTitleRect = CGRectMake( monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight );
+        [monthName drawInRect:monthTitleRect withAttributes:attributesRedRight];
+    }
 	
     switch (type) {
         case CTDay:
@@ -474,96 +517,86 @@ static const int CalendarViewMaxLinesCount  = 6;
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInView:self];
 	
+}
+
+- (void)leftSwipe
+{
     switch (type) {
         case CTDay:
         {
-            for( CalendarViewDayRect *dayRect in dayRects )
+            if( currentMonth == CalendarViewMonthInYear )
             {
-                if( CGRectContainsPoint( dayRect.frame, touchPoint ) )
-                {
-                    currentDay = dayRect.day;
-                    [self changeDateEvent];
-                    [self generateDayRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
+                currentMonth = 1;
+                ++currentYear;
+            }
+            else
+            {
+                ++currentMonth;
             }
         }
         break;
             
         case CTMonth:
         {
-            for( CalendarViewMonthRect *monthRect in monthRects )
-            {
-                if( CGRectContainsPoint( monthRect.frame, touchPoint ) )
-                {
-                    currentMonth = monthRect.month;
-                    [self changeDateEvent];
-                    [self generateMonthRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
-            }
+            ++currentYear;
         }
         break;
-            
+        
         case CTYear:
         {
-            for( CalendarViewYearRect *yearRect in yearRects )
-            {
-                if( CGRectContainsPoint( yearRect.frame, touchPoint ) )
-                {
-                    currentYear = yearRect.year;
-                    [self changeDateEvent];
-                    //[self generateYearRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
-            }
+            currentYear+=12;
+            [self generateYearRects];
         }
         break;
             
         default:
             break;
     }
-}
-
-- (void)leftSwipe
-{
-	if( currentMonth == CalendarViewMonthInYear )
-	{
-		currentMonth = 1;
-		++currentYear;
-	}
-	else
-	{
-		++currentMonth;
-	}
 	
 	[self changeDateEvent];
-	[self swipeMonth];
+	[self fade];
 }
 
 - (void)rightSwipe
 {
-	if( currentMonth == 1 )
-	{
-		currentMonth = CalendarViewMonthInYear;
-		--currentYear;
-	}
-	else
-	{
-		--currentMonth;
-	}
-	
+    switch (type) {
+        case CTDay:
+        {
+            if( currentMonth == 1 )
+            {
+                currentMonth = CalendarViewMonthInYear;
+                --currentYear;
+            }
+            else
+            {
+                --currentMonth;
+            }
+        }
+            break;
+            
+        case CTMonth:
+        {
+            --currentYear;
+        }
+            break;
+            
+        case CTYear:
+        {
+            currentYear-=12;
+            [self generateYearRects];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
 	[self changeDateEvent];
-	[self swipeMonth];
+	[self fade];
 }
 
-- (void)swipeMonth
+- (void)fade
 {
 	[UIView animateWithDuration:CalendarViewSwipeMonthFadeInTime
 						  delay:0
@@ -592,7 +625,7 @@ static const int CalendarViewMaxLinesCount  = 6;
         NSInteger t = type;
         if( recognizer.velocity < 0 )
         {
-            if( t - 1 >= 0 )
+            if( t - 1 >= minType )
             {
                 --t;
             }
@@ -608,8 +641,92 @@ static const int CalendarViewMaxLinesCount  = 6;
         if( t != type )
         {
             type = t;
-            [self swipeMonth];
+            [self fade];
         }
+    }
+}
+
+- (void)tap:(UITapGestureRecognizer *)recognizer
+{
+    CGPoint touchPoint = [recognizer locationInView:self];
+    
+    if( CGRectContainsPoint( yearTitleRect, touchPoint ) )
+    {
+        if (type!=CTYear) {
+            type = CTYear;
+            [self fade];
+        }
+        return;
+    }
+    
+    if( CGRectContainsPoint( monthTitleRect, touchPoint ) )
+    {
+        if (type!=CTMonth) {
+            type = CTMonth;
+            [self fade];
+        }
+        return;
+    }
+    
+    switch (type) {
+        case CTDay:
+        {
+            for( CalendarViewDayRect *dayRect in dayRects )
+            {
+                if( CGRectContainsPoint( dayRect.frame, touchPoint ) )
+                {
+                    currentDay = dayRect.day;
+                    [self changeDateEvent];
+                    //[self generateDayRects];
+                    [self setNeedsDisplay];
+                    break;
+                }
+            }
+        }
+            break;
+            
+        case CTMonth:
+        {
+            for( CalendarViewMonthRect *monthRect in monthRects )
+            {
+                if( CGRectContainsPoint( monthRect.frame, touchPoint ) )
+                {
+                    currentMonth = monthRect.month;
+                    [self changeDateEvent];
+                    [self generateMonthRects];
+                    [self setNeedsDisplay];
+                    break;
+                }
+            }
+        }
+            break;
+            
+        case CTYear:
+        {
+            for( CalendarViewYearRect *yearRect in yearRects )
+            {
+                if( CGRectContainsPoint( yearRect.frame, touchPoint ) )
+                {
+                    currentYear = yearRect.year;
+                    [self changeDateEvent];
+                    //[self generateYearRects];
+                    [self setNeedsDisplay];
+                    break;
+                }
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)doubleTap:(UITapGestureRecognizer *)recognizer
+{
+    if (type != CTDay && type > minType) {
+        --type;
+        [self fade];
     }
 }
 

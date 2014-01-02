@@ -17,6 +17,13 @@ typedef NS_ENUM(NSInteger, CalendarViewType)
     CT_Count
 };
 
+typedef NS_ENUM(NSInteger, CalendarMode)
+{
+    CM_Default,
+    CM_MonthsAndYears,
+    CM_Years
+};
+
 @interface CalendarViewDayRect : NSObject 
 
 @property int day;
@@ -49,6 +56,8 @@ typedef NS_ENUM(NSInteger, CalendarViewType)
 @interface CalendarView : UIView
 {
     NSInteger type;
+    NSInteger minType;
+    NSInteger mode;
     
 	NSInteger currentDay;
 	NSInteger currentMonth;
@@ -57,9 +66,13 @@ typedef NS_ENUM(NSInteger, CalendarViewType)
 	NSMutableArray *dayRects;
     NSMutableArray *monthRects;
     NSMutableArray *yearRects;
+    
+    CGRect yearTitleRect;
+    CGRect monthTitleRect;
 }
 
 - (id)initWithPosition:(CGFloat)x y:(CGFloat)y;
+- (void)setMode:(NSInteger)m;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 
