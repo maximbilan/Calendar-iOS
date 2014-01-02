@@ -24,24 +24,10 @@ typedef NS_ENUM(NSInteger, CalendarMode)
     CM_Years
 };
 
-@interface CalendarViewDayRect : NSObject 
+@interface CalendarViewRect : NSObject
 
-@property int day;
-@property CGRect frame;
-
-@end
-
-@interface CalendarViewMonthRect : NSObject
-
-@property NSInteger month;
-@property NSString *monthName;
-@property CGRect frame;
-
-@end
-
-@interface CalendarViewYearRect : NSObject
-
-@property NSInteger year;
+@property NSInteger value;
+@property NSString *str;
 @property CGRect frame;
 
 @end

@@ -18,6 +18,19 @@ static const CGFloat CalendarViewDayCellWidth   = 35;
 static const CGFloat CalendarViewDayCellHeight  = 35;
 static const CGFloat CalendarViewDayCellOffset  = 5;
 
+static const CGFloat CalendarViewMonthCellWidth = 90;
+static const CGFloat CalendarViewMonthCellHeight = 30;
+static const CGFloat CalendarViewMonthTitleOffsetY = 50;
+static const CGFloat CalendarViewMonthYStep = 60;
+static const NSInteger CalendarViewMonthInLine = 3;
+
+static const CGFloat CalendarViewYearCellWidth = 54;
+static const CGFloat CalendarViewYearCellHeight = 30;
+static const CGFloat CalendarViewYearTitleOffsetY = 50;
+static const CGFloat CalendarViewYearYStep = 45;
+static const NSInteger CalendarViewYearsAround = 12;
+static const NSInteger CalendarViewYearsInLine = 5;
+
 static const CGFloat CalendarViewMonthLabelWidth  = 100;
 static const CGFloat CalendarViewMonthLabelHeight = 20;
 
@@ -35,24 +48,12 @@ static const int CalendarViewDaysInWeek     = 7;
 static const int CalendarViewMonthInYear    = 12;
 static const int CalendarViewMaxLinesCount  = 6;
 
-@implementation CalendarViewDayRect
+static const CGFloat CalendarViewSelectionRound = 3.0;
 
-@synthesize day;
-@synthesize frame;
+@implementation CalendarViewRect;
 
-@end
-
-@implementation CalendarViewMonthRect
-
-@synthesize month;
-@synthesize monthName;
-@synthesize frame;
-
-@end
-
-@implementation CalendarViewYearRect
-
-@synthesize year;
+@synthesize value;
+@synthesize str;
 @synthesize frame;
 
 @end
@@ -64,25 +65,32 @@ static const int CalendarViewMaxLinesCount  = 6;
 - (void)generateDayRects;
 - (void)generateMonthRects;
 - (void)generateYearRects;
+
 - (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment;
 
-- (void)drawDay:(const int)day inRect:(CGRect)rect withAttributes:(NSDictionary *)attrs;
+- (void)drawCircle:(CGRect)rect toContext:(CGContextRef*)context;
+- (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef*)context;
 - (void)drawWeekDays;
 
-- (void)leftSwipe;
-- (void)rightSwipe;
-- (void)fade;
+- (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer;
+- (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer;
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer;
 - (void)tap:(UITapGestureRecognizer *)recognizer;
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer;
 
 - (void)changeDateEvent;
 
+- (void)fade;
+
+- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value;
+
 @end
 
 @implementation CalendarView
 
 @synthesize calendarDelegate = _calendarDelegate;
+
+#pragma mark - Initialization
 
 - (id)init
 {
@@ -103,8 +111,7 @@ static const int CalendarViewMaxLinesCount  = 6;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if( self )
-	{
+    if (self) {
 		[self setup];
     }
     return self;
@@ -117,30 +124,6 @@ static const int CalendarViewMaxLinesCount  = 6;
     [self setup];
 }
 
-- (void)setMode:(NSInteger)m
-{
-    mode = m;
-    switch (mode) {
-        case CM_Default:
-            type = CTDay;
-            minType = CTDay;
-            break;
-        
-        case CM_MonthsAndYears:
-            type = CTMonth;
-            minType = CTMonth;
-            break;
-        
-        case CM_Years:
-            type = CTYear;
-            minType = CTYear;
-            break;
-            
-        default:
-            break;
-    }
-}
-
 - (void)setup
 {
     dayRects = [[NSMutableArray alloc] init];
@@ -149,8 +132,6 @@ static const int CalendarViewMaxLinesCount  = 6;
     
     yearTitleRect = CGRectMake(0, 0, 0, 0);
     monthTitleRect = CGRectMake(0, 0, 0, 0);
-    
-    type = CTDay;
     
     [self setMode:CM_Default];
     
@@ -162,11 +143,11 @@ static const int CalendarViewMaxLinesCount  = 6;
     currentMonth = [components month];
     currentYear = [components year];
     
-    UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe)];
+    UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe:)];
     [left setDirection:UISwipeGestureRecognizerDirectionLeft];
     [self addGestureRecognizer:left];
     
-    UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipe)];
+    UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipe:)];
     [right setDirection:UISwipeGestureRecognizerDirectionRight];
     [self addGestureRecognizer:right];
     
@@ -185,6 +166,8 @@ static const int CalendarViewMaxLinesCount  = 6;
     [self generateMonthRects];
     [self generateYearRects];
 }
+
+#pragma mark - Generating of rects
 
 - (void)generateDayRects
 {
@@ -217,11 +200,12 @@ static const int CalendarViewMaxLinesCount  = 6;
 		x = xi * ( CalendarViewDayCellWidth + CalendarViewDayCellOffset );
 		++xi;
 		
-		CalendarViewDayRect *dayRect = [[CalendarViewDayRect alloc] init];
-		dayRect.day = i;
-		dayRect.frame = CGRectMake(x, y, w, h);
-		[dayRects addObject:dayRect];
-		
+        CalendarViewRect *dayRect = [[CalendarViewRect alloc] init];
+        dayRect.value = i;
+        dayRect.str = [NSString stringWithFormat:@"%d", i];
+        dayRect.frame = CGRectMake(x, y, w, h);
+        [dayRects addObject:dayRect];
+        
 		if( xi >= CalendarViewDaysInWeek )
 		{
 			xi = 0;
@@ -238,24 +222,22 @@ static const int CalendarViewMaxLinesCount  = 6;
     NSDateFormatter *formate = [NSDateFormatter new];
     NSArray *monthNames = [formate standaloneMonthSymbols];
     NSInteger index = 0;
-    CGFloat x, y = 50;
+    CGFloat x, y = CalendarViewMonthTitleOffsetY;
     NSInteger xi = 0;
-    for( NSString *monthName in monthNames )
-    {
-        x = xi * 90;
+    for (NSString *monthName in monthNames) {
+        x = xi * CalendarViewMonthCellWidth;
         ++xi;
         ++index;
         
-        CalendarViewMonthRect *monthRect = [[CalendarViewMonthRect alloc] init];
-        monthRect.month = index;
-        monthRect.monthName = monthName;
-        monthRect.frame = CGRectMake(x, y, 90, 30);
+        CalendarViewRect *monthRect = [[CalendarViewRect alloc] init];
+        monthRect.value = index;
+        monthRect.str = monthName;
+        monthRect.frame = CGRectMake(x, y, CalendarViewMonthCellWidth, CalendarViewMonthCellHeight);
         [monthRects addObject:monthRect];
         
-        if( xi >= 3 )
-        {
+        if (xi >= CalendarViewMonthInLine) {
             xi = 0;
-            y += 60;
+            y += CalendarViewMonthYStep;
         }
     }
 }
@@ -265,30 +247,30 @@ static const int CalendarViewMaxLinesCount  = 6;
     [yearRects removeAllObjects];
     
     NSMutableArray *years = [[NSMutableArray alloc] init];
-    for( NSInteger year = currentYear - 12; year <= currentYear + 12; ++year )
-    {
+    for (NSInteger year = currentYear - CalendarViewYearsAround; year <= currentYear + CalendarViewYearsAround; ++year) {
         [years addObject:[NSNumber numberWithInteger:year]];
     }
     
-    CGFloat x, y = 50;
+    CGFloat x, y = CalendarViewYearTitleOffsetY;
     NSInteger xi = 0;
-    for( NSNumber *obj in years )
-    {
-        x = xi * 54;
+    for (NSNumber *obj in years) {
+        x = xi * CalendarViewYearCellWidth;
         ++xi;
         
-        CalendarViewYearRect *yearRect = [[CalendarViewYearRect alloc] init];
-        yearRect.year = [obj integerValue];
-        yearRect.frame = CGRectMake(x, y, 54, 30);
+        CalendarViewRect *yearRect = [[CalendarViewRect alloc] init];
+        yearRect.value = [obj integerValue];
+        yearRect.str = [NSString stringWithFormat:@"%d", obj.integerValue];
+        yearRect.frame = CGRectMake(x, y, CalendarViewYearCellWidth, CalendarViewYearCellHeight);
         [yearRects addObject:yearRect];
         
-        if( xi >= 5 )
-        {
+        if (xi >= CalendarViewYearsInLine) {
             xi = 0;
-            y += 45;
+            y += CalendarViewYearYStep;
         }
     }
 }
+
+#pragma mark - Drawing
 
 - (void)drawRect:(CGRect)rect
 {
@@ -318,11 +300,11 @@ static const int CalendarViewMaxLinesCount  = 6;
 													 withColor:[UIColor redColor]
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
 
-	CTFontRef dayFont = CTFontCreateWithName( (CFStringRef)CalendarViewDefaultFont, CalendarViewDayFontSize, NULL );
-	CGRect dayFontBoundingBox = CTFontGetBoundingBox( dayFont );
+	CTFontRef cellFont = CTFontCreateWithName( (CFStringRef)CalendarViewDefaultFont, CalendarViewDayFontSize, NULL );
+	CGRect cellFontBoundingBox = CTFontGetBoundingBox( cellFont );
 	
 	NSString *year = [NSString stringWithFormat:@"%ld",(long)currentYear];
-	const CGFloat yearNameX = ( CalendarViewDayCellWidth - CGRectGetHeight( dayFontBoundingBox ) ) * 0.5f;
+	const CGFloat yearNameX = ( CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox ) ) * 0.5f;
     yearTitleRect = CGRectMake( yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight );
 	[year drawInRect:yearTitleRect withAttributes:attributesRedLeft];
 	
@@ -330,140 +312,88 @@ static const int CalendarViewMaxLinesCount  = 6;
         NSDateFormatter *formate = [NSDateFormatter new];
         NSArray *monthNames = [formate standaloneMonthSymbols];
         NSString *monthName = [monthNames objectAtIndex:( currentMonth - 1 )];
-        const CGFloat monthNameX = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - ( CalendarViewDayCellWidth - CGRectGetHeight( dayFontBoundingBox ) );
+        const CGFloat monthNameX = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - ( CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox ) );
         monthTitleRect = CGRectMake( monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight );
         [monthName drawInRect:monthTitleRect withAttributes:attributesRedRight];
     }
 	
+    NSMutableArray *rects = nil;
+    NSInteger currentValue = 0;
+    
     switch (type) {
         case CTDay:
         {
             [self drawWeekDays];
             
-            for( CalendarViewDayRect *dayRect in dayRects )
-            {
-                NSDictionary *attrs = nil;
-                
-                if( dayRect.day == currentDay )
-                {
-                    CGContextSetFillColorWithColor( context, [UIColor redColor].CGColor );
-                    CGContextFillEllipseInRect( context, dayRect.frame );
-                    
-                    attrs = attributesWhite;
-                }
-                else
-                {
-                    attrs = attributesBlack;
-                }
-                
-                const CGFloat h = CGRectGetHeight( dayRect.frame );
-                const CGFloat w = CGRectGetWidth( dayRect.frame );
-                const CGFloat x = dayRect.frame.origin.x;
-                const CGFloat y = dayRect.frame.origin.y + ( ( h - CGRectGetHeight( dayFontBoundingBox ) ) * 0.5 );
-                [self drawDay:dayRect.day inRect:CGRectMake( x, y, w, h ) withAttributes:attrs];
-            }
+            rects = dayRects;
+            currentValue = currentDay;
         }
         break;
             
         case CTMonth:
         {
-            for( CalendarViewMonthRect *monthRect in monthRects )
-            {
-                CGRect mRectText = monthRect.frame;
-                mRectText.origin.y = mRectText.origin.y + (( CGRectGetHeight(mRectText) - CGRectGetHeight( dayFontBoundingBox) ) * 0.5 );
-                
-                if( monthRect.month == currentMonth )
-                {
-                    CGContextSetFillColorWithColor( context, [UIColor redColor].CGColor );
-                    //CGContextFillEllipseInRect( context, monthRect.frame );
-                    
-                    CGFloat radius = 3.0;
-                    
-                    CGFloat minx = CGRectGetMinX(monthRect.frame), midx = CGRectGetMidX(monthRect.frame), maxx = CGRectGetMaxX(monthRect.frame);
-                    CGFloat miny = CGRectGetMinY(monthRect.frame), midy = CGRectGetMidY(monthRect.frame), maxy = CGRectGetMaxY(monthRect.frame);
-                    
-                    // Start at 1
-                    CGContextMoveToPoint(context, minx, midy);
-                    // Add an arc through 2 to 3
-                    CGContextAddArcToPoint(context, minx, miny, midx, miny, radius); 
-                    // Add an arc through 4 to 5 
-                    CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius); 
-                    // Add an arc through 6 to 7 
-                    CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius); 
-                    // Add an arc through 8 to 9 
-                    CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius); 
-                    // Close the path 
-                    CGContextClosePath(context); 
-                    // Fill & stroke the path
-                    
-                    CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
-                    CGContextDrawPath(context, kCGPathFillStroke);
-                    
-                    [monthRect.monthName drawInRect:mRectText withAttributes:attributesWhite];
-                }
-                else
-                {
-                    [monthRect.monthName drawInRect:mRectText withAttributes:attributesBlack];
-                }
-            }
+            rects = monthRects;
+            currentValue = currentMonth;
         }
         break;
             
         case CTYear:
         {
-            for( CalendarViewYearRect *yearRect in yearRects )
-            {
-                CGRect mRectText = yearRect.frame;
-                mRectText.origin.y = mRectText.origin.y + (( CGRectGetHeight(mRectText) - CGRectGetHeight( dayFontBoundingBox) ) * 0.5 );
-                
-                NSString *str = [NSString stringWithFormat:@"%i",yearRect.year];
-                
-                if( yearRect.year == currentYear )
-                {
-                    CGContextSetFillColorWithColor( context, [UIColor redColor].CGColor );
-                    //CGContextFillEllipseInRect( context, monthRect.frame );
-                    
-                    CGFloat radius = 3.0;
-                    
-                    CGFloat minx = CGRectGetMinX(yearRect.frame), midx = CGRectGetMidX(yearRect.frame), maxx = CGRectGetMaxX(yearRect.frame);
-                    CGFloat miny = CGRectGetMinY(yearRect.frame), midy = CGRectGetMidY(yearRect.frame), maxy = CGRectGetMaxY(yearRect.frame);
-                    
-                    // Start at 1
-                    CGContextMoveToPoint(context, minx, midy);
-                    // Add an arc through 2 to 3
-                    CGContextAddArcToPoint(context, minx, miny, midx, miny, radius);
-                    // Add an arc through 4 to 5
-                    CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius);
-                    // Add an arc through 6 to 7
-                    CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius);
-                    // Add an arc through 8 to 9
-                    CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius);
-                    // Close the path
-                    CGContextClosePath(context);
-                    // Fill & stroke the path
-                    
-                    CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
-                    CGContextDrawPath(context, kCGPathFillStroke);
-                    
-                    [str drawInRect:mRectText withAttributes:attributesWhite];
-                }
-                else
-                {
-                    [str drawInRect:mRectText withAttributes:attributesBlack];
-                }
-            }
+            rects = yearRects;
+            currentValue = currentYear;
         }
         break;
             
         default:
             break;
     }
+    
+    if (rects) {
+        for (CalendarViewRect *rect in rects) {
+            NSDictionary *attrs = nil;
+            CGRect rectText = rect.frame;
+            rectText.origin.y = rectText.origin.y + (( CGRectGetHeight(rectText) - CGRectGetHeight( cellFontBoundingBox) ) * 0.5 );
+        
+            if (rect.value == currentValue) {
+                if (type == CTDay) {
+                    [self drawCircle:rect.frame toContext:&context];
+                }
+                else {
+                    [self drawRoundedRectangle:rect.frame toContext:&context];
+                }
+            
+                attrs = attributesWhite;
+            } else {
+                attrs = attributesBlack;
+            }
+        
+            [rect.str drawInRect:rectText withAttributes:attrs];
+        }
+    }
 }
 
-- (void)drawDay:(const int)day inRect:(CGRect)rect withAttributes:(NSDictionary *)attrs
+- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context
 {
-	NSString *str = [NSString stringWithFormat:@"%i",day];
-	[str drawInRect:rect withAttributes:attrs];
+    CGContextSetFillColorWithColor(*context, [UIColor redColor].CGColor);
+    CGContextFillEllipseInRect(*context, rect);
+}
+
+- (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef *)context
+{
+    CGContextSetFillColorWithColor(*context, [UIColor redColor].CGColor);
+    
+    CGFloat minx = CGRectGetMinX(rect), midx = CGRectGetMidX(rect), maxx = CGRectGetMaxX(rect);
+    CGFloat miny = CGRectGetMinY(rect), midy = CGRectGetMidY(rect), maxy = CGRectGetMaxY(rect);
+    
+    CGContextMoveToPoint(*context, minx, midy);
+    CGContextAddArcToPoint(*context, minx, miny, midx, miny, CalendarViewSelectionRound);
+    CGContextAddArcToPoint(*context, maxx, miny, maxx, midy, CalendarViewSelectionRound);
+    CGContextAddArcToPoint(*context, maxx, maxy, midx, maxy, CalendarViewSelectionRound);
+    CGContextAddArcToPoint(*context, minx, maxy, minx, midy, CalendarViewSelectionRound);
+    CGContextClosePath(*context);
+    
+    CGContextSetStrokeColorWithColor(*context, [UIColor redColor].CGColor);
+    CGContextDrawPath(*context, kCGPathFillStroke);
 }
 
 - (void)drawWeekDays
@@ -515,12 +445,7 @@ static const int CalendarViewMaxLinesCount  = 6;
 	}
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	
-}
-
-- (void)leftSwipe
+- (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
 {
     switch (type) {
         case CTDay:
@@ -558,7 +483,7 @@ static const int CalendarViewMaxLinesCount  = 6;
 	[self fade];
 }
 
-- (void)rightSwipe
+- (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
 {
     switch (type) {
         case CTDay:
@@ -668,58 +593,43 @@ static const int CalendarViewMaxLinesCount  = 6;
         return;
     }
     
+    BOOL hasEvent = NO;
     switch (type) {
         case CTDay:
         {
-            for( CalendarViewDayRect *dayRect in dayRects )
-            {
-                if( CGRectContainsPoint( dayRect.frame, touchPoint ) )
-                {
-                    currentDay = dayRect.day;
-                    [self changeDateEvent];
-                    //[self generateDayRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
-            }
+            hasEvent = [self checkPoint:touchPoint inArray:dayRects andSetValue:&currentDay];
         }
-            break;
-            
+        break;
         case CTMonth:
         {
-            for( CalendarViewMonthRect *monthRect in monthRects )
-            {
-                if( CGRectContainsPoint( monthRect.frame, touchPoint ) )
-                {
-                    currentMonth = monthRect.month;
-                    [self changeDateEvent];
-                    [self generateMonthRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
-            }
+            hasEvent = [self checkPoint:touchPoint inArray:monthRects andSetValue:&currentMonth];
         }
-            break;
-            
+        break;
         case CTYear:
         {
-            for( CalendarViewYearRect *yearRect in yearRects )
-            {
-                if( CGRectContainsPoint( yearRect.frame, touchPoint ) )
-                {
-                    currentYear = yearRect.year;
-                    [self changeDateEvent];
-                    //[self generateYearRects];
-                    [self setNeedsDisplay];
-                    break;
-                }
-            }
+            hasEvent = [self checkPoint:touchPoint inArray:yearRects andSetValue:&currentYear];
         }
-            break;
+        break;
             
         default:
             break;
     }
+    
+    if (hasEvent) {
+        [self changeDateEvent];
+        [self setNeedsDisplay];
+    }
+}
+
+- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value
+{
+    for (CalendarViewRect *rect in array) {
+        if (CGRectContainsPoint( rect.frame, point)) {
+            *value = rect.value;
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer
@@ -743,6 +653,30 @@ static const int CalendarViewMaxLinesCount  = 6;
 							 };
 	
 	return attrs;
+}
+
+- (void)setMode:(NSInteger)m
+{
+    mode = m;
+    switch (mode) {
+        case CM_Default:
+            type = CTDay;
+            minType = CTDay;
+            break;
+            
+        case CM_MonthsAndYears:
+            type = CTMonth;
+            minType = CTMonth;
+            break;
+            
+        case CM_Years:
+            type = CTYear;
+            minType = CTYear;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 @end
