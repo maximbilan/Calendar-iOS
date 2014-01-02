@@ -133,6 +133,8 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     yearTitleRect = CGRectMake(0, 0, 0, 0);
     monthTitleRect = CGRectMake(0, 0, 0, 0);
     
+    event = CE_None;
+    
     [self setMode:CM_Default];
     
     NSDate *now = [NSDate date];
@@ -195,6 +197,35 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         default:
             break;
     }
+}
+
+#pragma mark - Getting, setting current date
+
+- (void)setCurrentDate:(NSDate *)currentDate
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:currentDate];
+    
+    currentDay = [components day];
+    currentMonth = [components month];
+    currentYear = [components year];
+}
+
+- (NSDate *)currentDate
+{
+    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	[calendar setTimeZone:timeZone];
+	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+	[components setYear:currentYear];
+	[components setMonth:currentMonth];
+	[components setDay:currentDay];
+	[components setHour:0];
+	[components setMinute:0];
+	[components setSecond:0];
+	[components setTimeZone:timeZone];
+	
+	return [calendar dateFromComponents:components];
 }
 
 #pragma mark - Generating of rects
@@ -454,28 +485,24 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)changeDateEvent
 {
-	NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-	[calendar setTimeZone:timeZone];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
-	[components setYear:currentYear];
-	[components setMonth:currentMonth];
-	[components setDay:currentDay];
-	[components setHour:0];
-	[components setMinute:0];
-	[components setSecond:0];
-	[components setTimeZone:timeZone];
-	
-	NSDate *finalDate = [calendar dateFromComponents:components];
+	NSDate *currentDate = [self currentDate];
 	if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:)]) {
-		[_calendarDelegate didChangeCalendarDate:finalDate];
+		[_calendarDelegate didChangeCalendarDate:currentDate];
 	}
+    if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:withType:withEvent:)]) {
+        [_calendarDelegate didChangeCalendarDate:currentDate withType:type withEvent:event];
+    }
+    if (event==CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
+        [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
+    }
 }
 
 #pragma mark - Gestures
 
 - (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
 {
+    event = CE_SwipeLeft;
+    
     switch (type) {
         case CTDay:
         {
@@ -512,6 +539,8 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
 {
+    event = CE_SwipeRight;
+    
     switch (type) {
         case CTDay:
         {
@@ -548,36 +577,18 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	[self fade];
 }
 
-- (void)fade
-{
-	[UIView animateWithDuration:CalendarViewSwipeMonthFadeInTime
-						  delay:0
-						options:0
-					 animations:^{
-						 self.alpha = 0.0f;
-					 }
-					 completion:^(BOOL finished) {
-						 [self setNeedsDisplay];
-						 [UIView animateWithDuration:CalendarViewSwipeMonthFadeOutTime
-											   delay:0
-											 options:0
-										  animations:^{
-											  self.alpha = 1.0f;
-										  }
-										  completion:nil];
-					 }];
-}
-
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         NSInteger t = type;
         if (recognizer.velocity < 0) {
+            event = CE_PinchIn;
             if (t - 1 >= minType) {
                 --t;
             }
         }
         else {
+            event = CE_PinchOut;
             if (t + 1 < CT_Count) {
                 ++t;
             }
@@ -592,6 +603,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)tap:(UITapGestureRecognizer *)recognizer
 {
+    event = CE_Tap;
     CGPoint touchPoint = [recognizer locationInView:self];
     
     if (CGRectContainsPoint(yearTitleRect, touchPoint)) {
@@ -640,6 +652,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer
 {
+    event = CE_DoubleTap;
     if (type != CTDay && type > minType) {
         --type;
         [self fade];
@@ -672,6 +685,26 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 							 };
 	
 	return attrs;
+}
+
+- (void)fade
+{
+	[UIView animateWithDuration:CalendarViewSwipeMonthFadeInTime
+						  delay:0
+						options:0
+					 animations:^{
+						 self.alpha = 0.0f;
+					 }
+					 completion:^(BOOL finished) {
+						 [self setNeedsDisplay];
+						 [UIView animateWithDuration:CalendarViewSwipeMonthFadeOutTime
+											   delay:0
+											 options:0
+										  animations:^{
+											  self.alpha = 1.0f;
+										  }
+										  completion:nil];
+					 }];
 }
 
 @end

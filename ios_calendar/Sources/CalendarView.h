@@ -24,6 +24,17 @@ typedef NS_ENUM(NSInteger, CalendarMode)
     CM_Years
 };
 
+typedef NS_ENUM(NSInteger, CalendarEvent)
+{
+    CE_None,
+    CE_Tap,
+    CE_DoubleTap,
+    CE_SwipeLeft,
+    CE_SwipeRight,
+    CE_PinchIn,
+    CE_PinchOut
+};
+
 @interface CalendarViewRect : NSObject
 
 @property NSInteger value;
@@ -37,6 +48,10 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 @required
 - (void)didChangeCalendarDate:(NSDate *)date;
 
+@optional
+- (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
+- (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
+
 @end
 
 @interface CalendarView : UIView
@@ -44,6 +59,7 @@ typedef NS_ENUM(NSInteger, CalendarMode)
     NSInteger type;
     NSInteger minType;
     NSInteger mode;
+    NSInteger event;
     
 	NSInteger currentDay;
 	NSInteger currentMonth;
@@ -61,5 +77,6 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 - (void)setMode:(NSInteger)m;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
+@property (nonatomic, weak) NSDate *currentDate;
 
 @end
