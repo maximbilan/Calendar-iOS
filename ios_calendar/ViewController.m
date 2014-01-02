@@ -10,6 +10,8 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet CalendarView *calendarView;
+
 @end
 
 @implementation ViewController
@@ -17,13 +19,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    self.calendarView.calendarDelegate = self;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)didChangeCalendarDate:(NSDate *)date
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    NSLog(@"didChangeCalendarDate:%@", date);
+}
+
+- (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event
+{
+    NSLog(@"didChangeCalendarDate:%@ withType:%d withEvent:%d", date, type, event);
+}
+
+- (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type
+{
+    NSLog(@"didDoubleTapCalendar:%@ withType:%d", date, type);
 }
 
 @end

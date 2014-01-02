@@ -492,9 +492,6 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:withType:withEvent:)]) {
         [_calendarDelegate didChangeCalendarDate:currentDate withType:type withEvent:event];
     }
-    if (event==CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
-        [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
-    }
 }
 
 #pragma mark - Gestures
@@ -656,6 +653,11 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     if (type != CTDay && type > minType) {
         --type;
         [self fade];
+    }
+    
+    NSDate *currentDate = [self currentDate];
+    if (event==CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
+        [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
     }
 }
 

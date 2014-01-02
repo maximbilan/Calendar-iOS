@@ -32,6 +32,9 @@
                             <constraint firstAttribute="centerY" secondItem="L8L-8V-u8e" secondAttribute="centerY" id="yGd-AZ-eWL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="calendarView" destination="L8L-8V-u8e" id="Jd6-2y-JeM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

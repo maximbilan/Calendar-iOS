@@ -32,6 +32,9 @@
                             <constraint firstAttribute="centerX" secondItem="Eap-L3-erN" secondAttribute="centerX" id="36q-nY-zZf"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="calendarView" destination="Eap-L3-erN" id="j4K-da-Kao"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
