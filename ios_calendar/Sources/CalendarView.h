@@ -27,8 +27,8 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 @interface CalendarViewRect : NSObject
 
 @property NSInteger value;
-@property NSString *str;
-@property CGRect frame;
+@property NSString  *str;
+@property CGRect    frame;
 
 @end
 

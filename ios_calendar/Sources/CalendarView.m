@@ -11,44 +11,44 @@
 
 #import <CoreText/CoreText.h>
 
+static const CGFloat CalendarViewDayCellWidth       = 35;
+static const CGFloat CalendarViewDayCellHeight      = 35;
+static const CGFloat CalendarViewDayCellOffset      = 5;
+
+static const CGFloat CalendarViewMonthCellWidth     = 90;
+static const CGFloat CalendarViewMonthCellHeight    = 30;
+static const CGFloat CalendarViewMonthTitleOffsetY  = 50;
+static const CGFloat CalendarViewMonthYStep         = 60;
+static const NSInteger CalendarViewMonthInLine      = 3;
+
+static const CGFloat CalendarViewYearCellWidth      = 54;
+static const CGFloat CalendarViewYearCellHeight     = 30;
+static const CGFloat CalendarViewYearTitleOffsetY   = 50;
+static const CGFloat CalendarViewYearYStep          = 45;
+static const NSInteger CalendarViewYearsAround      = 12;
+static const NSInteger CalendarViewYearsInLine      = 5;
+
+static const CGFloat CalendarViewMonthLabelWidth    = 100;
+static const CGFloat CalendarViewMonthLabelHeight   = 20;
+
+static const CGFloat CalendarViewYearLabelWidth     = 40;
+static const CGFloat CalendarViewYearLabelHeight    = 20;
+
+static const CGFloat CalendarViewWeekDaysYOffset    = 30;
+static const CGFloat CalendarViewDaysYOffset        = 60;
+
+static NSString * const CalendarViewDefaultFont     = @"TrebuchetMS";
+static const CGFloat CalendarViewDayFontSize        = 16;
+static const CGFloat CalendarViewHeaderFontSize     = 18;
+
+static const NSInteger CalendarViewDaysInWeek       = 7;
+static const NSInteger CalendarViewMonthInYear      = 12;
+static const NSInteger CalendarViewMaxLinesCount    = 6;
+
+static const CGFloat CalendarViewSelectionRound     = 3.0;
+
 static const NSTimeInterval CalendarViewSwipeMonthFadeInTime  = 0.2;
 static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
-
-static const CGFloat CalendarViewDayCellWidth   = 35;
-static const CGFloat CalendarViewDayCellHeight  = 35;
-static const CGFloat CalendarViewDayCellOffset  = 5;
-
-static const CGFloat CalendarViewMonthCellWidth = 90;
-static const CGFloat CalendarViewMonthCellHeight = 30;
-static const CGFloat CalendarViewMonthTitleOffsetY = 50;
-static const CGFloat CalendarViewMonthYStep = 60;
-static const NSInteger CalendarViewMonthInLine = 3;
-
-static const CGFloat CalendarViewYearCellWidth = 54;
-static const CGFloat CalendarViewYearCellHeight = 30;
-static const CGFloat CalendarViewYearTitleOffsetY = 50;
-static const CGFloat CalendarViewYearYStep = 45;
-static const NSInteger CalendarViewYearsAround = 12;
-static const NSInteger CalendarViewYearsInLine = 5;
-
-static const CGFloat CalendarViewMonthLabelWidth  = 100;
-static const CGFloat CalendarViewMonthLabelHeight = 20;
-
-static const CGFloat CalendarViewYearLabelWidth  = 40;
-static const CGFloat CalendarViewYearLabelHeight = 20;
-
-static const CGFloat CalendarViewWeekDaysYOffset = 30;
-static const CGFloat CalendarViewDaysYOffset     = 60;
-
-static NSString * const CalendarViewDefaultFont = @"TrebuchetMS";
-static const CGFloat CalendarViewDayFontSize    = 16;
-static const CGFloat CalendarViewHeaderFontSize = 18;
-
-static const int CalendarViewDaysInWeek     = 7;
-static const int CalendarViewMonthInYear    = 12;
-static const int CalendarViewMaxLinesCount  = 6;
-
-static const CGFloat CalendarViewSelectionRound = 3.0;
 
 @implementation CalendarViewRect;
 
@@ -66,10 +66,8 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 - (void)generateMonthRects;
 - (void)generateYearRects;
 
-- (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment;
-
-- (void)drawCircle:(CGRect)rect toContext:(CGContextRef*)context;
-- (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef*)context;
+- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context;
+- (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef *)context;
 - (void)drawWeekDays;
 
 - (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer;
@@ -80,9 +78,9 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 
 - (void)changeDateEvent;
 
-- (void)fade;
-
+- (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment;
 - (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value;
+- (void)fade;
 
 @end
 
@@ -94,16 +92,16 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 
 - (id)init
 {
-	self = [self initWithPosition:0 y:0];
+	self = [self initWithPosition:0.0 y:0.0];
 	return self;
 }
 
 - (id)initWithPosition:(CGFloat)x y:(CGFloat)y
 {
-	const CGFloat width = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek;
-	const CGFloat height = ( CalendarViewDayCellHeight + CalendarViewDayCellOffset ) * CalendarViewMaxLinesCount + CalendarViewDaysYOffset;
+	const CGFloat width = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek;
+	const CGFloat height = (CalendarViewDayCellHeight + CalendarViewDayCellOffset) * CalendarViewMaxLinesCount + CalendarViewDaysYOffset;
 	
-    self = [self initWithFrame:CGRectMake( x, y, width, height )];
+    self = [self initWithFrame:CGRectMake(x, y, width, height)];
 	
     return self;
 }
@@ -123,6 +121,8 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
     
     [self setup];
 }
+
+#pragma mark - Setup
 
 - (void)setup
 {
@@ -167,6 +167,36 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
     [self generateYearRects];
 }
 
+- (void)setMode:(NSInteger)m
+{
+    mode = m;
+    switch (mode) {
+        case CM_Default:
+        {
+            type = CTDay;
+            minType = CTDay;
+        }
+        break;
+            
+        case CM_MonthsAndYears:
+        {
+            type = CTMonth;
+            minType = CTMonth;
+        }
+        break;
+            
+        case CM_Years:
+        {
+            type = CTYear;
+            minType = CTYear;
+        }
+        break;
+            
+        default:
+            break;
+    }
+}
+
 #pragma mark - Generating of rects
 
 - (void)generateDayRects
@@ -192,12 +222,11 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 	CGFloat x = 0;
 	CGFloat y = yOffSet;
 	
-	int xi = (int)weekday - 1;
-	int yi = 0;
+	NSInteger xi = weekday - 1;
+	NSInteger yi = 0;
 	
-	for( int i = 1; i <= lastDayOfMonth; ++i )
-	{
-		x = xi * ( CalendarViewDayCellWidth + CalendarViewDayCellOffset );
+	for (NSInteger i = 1; i <= lastDayOfMonth; ++i) {
+		x = xi * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
 		++xi;
 		
         CalendarViewRect *dayRect = [[CalendarViewRect alloc] init];
@@ -206,11 +235,10 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
         dayRect.frame = CGRectMake(x, y, w, h);
         [dayRects addObject:dayRect];
         
-		if( xi >= CalendarViewDaysInWeek )
-		{
+		if (xi >= CalendarViewDaysInWeek) {
 			xi = 0;
 			++yi;
-			y = yOffSet + yi * ( CalendarViewDayCellHeight + CalendarViewDayCellOffset );
+			y = yOffSet + yi * (CalendarViewDayCellHeight + CalendarViewDayCellOffset);
 		}
 	}
 }
@@ -248,7 +276,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
     
     NSMutableArray *years = [[NSMutableArray alloc] init];
     for (NSInteger year = currentYear - CalendarViewYearsAround; year <= currentYear + CalendarViewYearsAround; ++year) {
-        [years addObject:[NSNumber numberWithInteger:year]];
+        [years addObject:@(year)];
     }
     
     CGFloat x, y = CalendarViewYearTitleOffsetY;
@@ -259,7 +287,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
         
         CalendarViewRect *yearRect = [[CalendarViewRect alloc] init];
         yearRect.value = [obj integerValue];
-        yearRect.str = [NSString stringWithFormat:@"%d", obj.integerValue];
+        yearRect.str = [NSString stringWithFormat:@"%ld", (long)[obj integerValue]];
         yearRect.frame = CGRectMake(x, y, CalendarViewYearCellWidth, CalendarViewYearCellHeight);
         [yearRects addObject:yearRect];
         
@@ -275,11 +303,11 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-	CGContextClearRect( context, rect );
+	CGContextClearRect(context, rect);
 	
-	CGContextSetFillColorWithColor( context, [UIColor whiteColor].CGColor );
-	CGContextFillRect( context, rect );
-		
+	CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+	CGContextFillRect(context, rect);
+    
 	NSDictionary *attributesBlack = [self generateAttributes:CalendarViewDefaultFont
 												withFontSize:CalendarViewDayFontSize
 												   withColor:[UIColor blackColor]
@@ -289,7 +317,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 												withFontSize:CalendarViewDayFontSize
 												   withColor:[UIColor whiteColor]
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
-
+    
 	NSDictionary *attributesRedRight = [self generateAttributes:CalendarViewDefaultFont
 												   withFontSize:CalendarViewHeaderFontSize
 													  withColor:[UIColor redColor]
@@ -299,21 +327,22 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 												  withFontSize:CalendarViewHeaderFontSize
 													 withColor:[UIColor redColor]
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
-
-	CTFontRef cellFont = CTFontCreateWithName( (CFStringRef)CalendarViewDefaultFont, CalendarViewDayFontSize, NULL );
-	CGRect cellFontBoundingBox = CTFontGetBoundingBox( cellFont );
-	
+    
+	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)CalendarViewDefaultFont, CalendarViewDayFontSize, NULL);
+	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
+	CFRelease(cellFont);
+    
 	NSString *year = [NSString stringWithFormat:@"%ld",(long)currentYear];
-	const CGFloat yearNameX = ( CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox ) ) * 0.5f;
-    yearTitleRect = CGRectMake( yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight );
+	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox)) * 0.5f;
+    yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
 	[year drawInRect:yearTitleRect withAttributes:attributesRedLeft];
 	
     if (mode!=CM_Years) {
         NSDateFormatter *formate = [NSDateFormatter new];
         NSArray *monthNames = [formate standaloneMonthSymbols];
-        NSString *monthName = [monthNames objectAtIndex:( currentMonth - 1 )];
-        const CGFloat monthNameX = ( CalendarViewDayCellWidth + CalendarViewDayCellOffset ) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - ( CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox ) );
-        monthTitleRect = CGRectMake( monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight );
+        NSString *monthName = monthNames[( currentMonth - 1 )];
+        const CGFloat monthNameX = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox));
+        monthTitleRect = CGRectMake(monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight);
         [monthName drawInRect:monthTitleRect withAttributes:attributesRedRight];
     }
 	
@@ -329,14 +358,12 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
             currentValue = currentDay;
         }
         break;
-            
         case CTMonth:
         {
             rects = monthRects;
             currentValue = currentMonth;
         }
         break;
-            
         case CTYear:
         {
             rects = yearRects;
@@ -353,7 +380,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
             NSDictionary *attrs = nil;
             CGRect rectText = rect.frame;
             rectText.origin.y = rectText.origin.y + (( CGRectGetHeight(rectText) - CGRectGetHeight( cellFontBoundingBox) ) * 0.5 );
-        
+            
             if (rect.value == currentValue) {
                 if (type == CTDay) {
                     [self drawCircle:rect.frame toContext:&context];
@@ -361,12 +388,12 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
                 else {
                     [self drawRoundedRectangle:rect.frame toContext:&context];
                 }
-            
+                
                 attrs = attributesWhite;
             } else {
                 attrs = attributesBlack;
             }
-        
+            
             [rect.str drawInRect:rectText withAttributes:attrs];
         }
     }
@@ -411,18 +438,19 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 	const CGFloat w = CalendarViewDayCellWidth;
 	const CGFloat h = CalendarViewDayCellHeight;
 	
-	for( int i = 1; i < CalendarViewDaysInWeek; ++i )
-	{
-		x = ( i - 1 ) * ( CalendarViewDayCellWidth + CalendarViewDayCellOffset );
+	for (int i = 1; i < CalendarViewDaysInWeek; ++i) {
+		x = (i - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
 		
-		NSString *str = [NSString stringWithFormat:@"%@",[weekdayNames objectAtIndex:i]];
+		NSString *str = [NSString stringWithFormat:@"%@",weekdayNames[i]];
 		[str drawInRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
 	
-	NSString *strSunday = [NSString stringWithFormat:@"%@",[weekdayNames objectAtIndex:0]];
-	x = ( CalendarViewDaysInWeek - 1 ) * ( CalendarViewDayCellWidth + CalendarViewDayCellOffset );
+	NSString *strSunday = [NSString stringWithFormat:@"%@",weekdayNames[0]];
+	x = (CalendarViewDaysInWeek - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
 	[strSunday drawInRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 }
+
+#pragma mark - Change date event
 
 - (void)changeDateEvent
 {
@@ -439,38 +467,37 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 	[components setTimeZone:timeZone];
 	
 	NSDate *finalDate = [calendar dateFromComponents:components];
-	if( _calendarDelegate && [_calendarDelegate respondsToSelector:@selector( didChangeCalendarDate: )] )
-	{
+	if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:)]) {
 		[_calendarDelegate didChangeCalendarDate:finalDate];
 	}
 }
+
+#pragma mark - Gestures
 
 - (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
 {
     switch (type) {
         case CTDay:
         {
-            if( currentMonth == CalendarViewMonthInYear )
-            {
+            if (currentMonth == CalendarViewMonthInYear) {
                 currentMonth = 1;
                 ++currentYear;
             }
-            else
-            {
+            else {
                 ++currentMonth;
             }
+            
+            [self generateDayRects];
         }
         break;
-            
         case CTMonth:
         {
             ++currentYear;
         }
         break;
-        
         case CTYear:
         {
-            currentYear+=12;
+            currentYear += CalendarViewYearsAround;
             [self generateYearRects];
         }
         break;
@@ -488,30 +515,30 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
     switch (type) {
         case CTDay:
         {
-            if( currentMonth == 1 )
-            {
+            if (currentMonth == 1) {
                 currentMonth = CalendarViewMonthInYear;
                 --currentYear;
             }
-            else
-            {
+            else {
                 --currentMonth;
             }
+            
+            [self generateDayRects];
         }
-            break;
+        break;
             
         case CTMonth:
         {
             --currentYear;
         }
-            break;
+        break;
             
         case CTYear:
         {
-            currentYear-=12;
+            currentYear -= CalendarViewYearsAround;
             [self generateYearRects];
         }
-            break;
+        break;
             
         default:
             break;
@@ -529,9 +556,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 					 animations:^{
 						 self.alpha = 0.0f;
 					 }
-					 completion:^( BOOL finished ) {
-						 [self generateDayRects];
-                         [self generateMonthRects];
+					 completion:^(BOOL finished) {
 						 [self setNeedsDisplay];
 						 [UIView animateWithDuration:CalendarViewSwipeMonthFadeOutTime
 											   delay:0
@@ -545,26 +570,20 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer
 {
-    if( recognizer.state == UIGestureRecognizerStateEnded )
-    {
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
         NSInteger t = type;
-        if( recognizer.velocity < 0 )
-        {
-            if( t - 1 >= minType )
-            {
+        if (recognizer.velocity < 0) {
+            if (t - 1 >= minType) {
                 --t;
             }
         }
-        else
-        {
-            if( t + 1 < CT_Count )
-            {
+        else {
+            if (t + 1 < CT_Count) {
                 ++t;
             }
         }
-    
-        if( t != type )
-        {
+        
+        if (t != type) {
             type = t;
             [self fade];
         }
@@ -575,8 +594,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 {
     CGPoint touchPoint = [recognizer locationInView:self];
     
-    if( CGRectContainsPoint( yearTitleRect, touchPoint ) )
-    {
+    if (CGRectContainsPoint(yearTitleRect, touchPoint)) {
         if (type!=CTYear) {
             type = CTYear;
             [self fade];
@@ -584,8 +602,7 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
         return;
     }
     
-    if( CGRectContainsPoint( monthTitleRect, touchPoint ) )
-    {
+    if (CGRectContainsPoint(monthTitleRect, touchPoint)) {
         if (type!=CTMonth) {
             type = CTMonth;
             [self fade];
@@ -621,6 +638,16 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
     }
 }
 
+- (void)doubleTap:(UITapGestureRecognizer *)recognizer
+{
+    if (type != CTDay && type > minType) {
+        --type;
+        [self fade];
+    }
+}
+
+#pragma mark - Additional functions
+
 - (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value
 {
     for (CalendarViewRect *rect in array) {
@@ -630,14 +657,6 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
         }
     }
     return NO;
-}
-
-- (void)doubleTap:(UITapGestureRecognizer *)recognizer
-{
-    if (type != CTDay && type > minType) {
-        --type;
-        [self fade];
-    }
 }
 
 - (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment
@@ -653,30 +672,6 @@ static const CGFloat CalendarViewSelectionRound = 3.0;
 							 };
 	
 	return attrs;
-}
-
-- (void)setMode:(NSInteger)m
-{
-    mode = m;
-    switch (mode) {
-        case CM_Default:
-            type = CTDay;
-            minType = CTDay;
-            break;
-            
-        case CM_MonthsAndYears:
-            type = CTMonth;
-            minType = CTMonth;
-            break;
-            
-        case CM_Years:
-            type = CTYear;
-            minType = CTYear;
-            break;
-            
-        default:
-            break;
-    }
 }
 
 @end
