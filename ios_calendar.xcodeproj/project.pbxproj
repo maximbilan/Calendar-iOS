@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		94965937188F0DD300085A01 /* UIPopoverController+iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 94965936188F0DD300085A01 /* UIPopoverController+iPhone.m */; };
+		9496593A188F0F0600085A01 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94965939188F0F0600085A01 /* PopoverViewController.m */; };
 		94E614D01874405400BD4D9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94E614CF1874405400BD4D9F /* Foundation.framework */; };
 		94E614D21874405400BD4D9F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94E614D11874405400BD4D9F /* CoreGraphics.framework */; };
 		94E614D41874405400BD4D9F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94E614D31874405400BD4D9F /* UIKit.framework */; };
@@ -22,6 +24,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		94965935188F0DD300085A01 /* UIPopoverController+iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIPopoverController+iPhone.h"; sourceTree = "<group>"; };
+		94965936188F0DD300085A01 /* UIPopoverController+iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIPopoverController+iPhone.m"; sourceTree = "<group>"; };
+		94965938188F0F0600085A01 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
+		94965939188F0F0600085A01 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		94E614CC1874405400BD4D9F /* ios_calendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios_calendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94E614CF1874405400BD4D9F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		94E614D11874405400BD4D9F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -96,6 +102,10 @@
 				94E614E41874405400BD4D9F /* Main_iPad.storyboard */,
 				94E614E71874405400BD4D9F /* ViewController.h */,
 				94E614E81874405400BD4D9F /* ViewController.m */,
+				94965938188F0F0600085A01 /* PopoverViewController.h */,
+				94965939188F0F0600085A01 /* PopoverViewController.m */,
+				94965935188F0DD300085A01 /* UIPopoverController+iPhone.h */,
+				94965936188F0DD300085A01 /* UIPopoverController+iPhone.m */,
 				94E614EA1874405400BD4D9F /* Images.xcassets */,
 				94E614D61874405400BD4D9F /* Supporting Files */,
 			);
@@ -192,9 +202,11 @@
 			files = (
 				94E614E91874405400BD4D9F /* ViewController.m in Sources */,
 				94E6150D1874410D00BD4D9F /* NSDate+CalendarView.m in Sources */,
+				94965937188F0DD300085A01 /* UIPopoverController+iPhone.m in Sources */,
 				94E614E01874405400BD4D9F /* AppDelegate.m in Sources */,
 				94E6150C1874410D00BD4D9F /* CalendarView.m in Sources */,
 				94E614DC1874405400BD4D9F /* main.m in Sources */,
+				9496593A188F0F0600085A01 /* PopoverViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

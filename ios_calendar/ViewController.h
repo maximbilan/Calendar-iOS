@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "CalendarView.h"
 
-@interface ViewController : UIViewController <CalendarViewDelegate>
+@interface ViewController : UIViewController <CalendarViewDelegate, UIPopoverControllerDelegate>
 
 @end

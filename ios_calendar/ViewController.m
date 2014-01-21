@@ -7,8 +7,14 @@
 //
 
 #import "ViewController.h"
+#import "PopoverViewController.h"
+#import "UIPopoverController+iPhone.h"
 
 @interface ViewController ()
+{
+    PopoverViewController *viewController;
+    UIPopoverController *popover;
+}
 
 @property (weak, nonatomic) IBOutlet CalendarView *calendarView;
 
@@ -19,6 +25,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PopoverContentController"];
+    
+    popover = [[UIPopoverController alloc] initWithContentViewController:viewController];
+	popover.popoverContentSize = CGSizeMake(300, 320);
+	popover.delegate = self;
     
     self.calendarView.calendarDelegate = self;
 }
@@ -36,6 +48,11 @@
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type
 {
     NSLog(@"didDoubleTapCalendar:%@ withType:%d", date, type);
+}
+
+- (IBAction)popoverButtonAction:(UIButton *)sender
+{
+    [popover presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
 @end
