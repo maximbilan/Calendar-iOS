@@ -1,9 +1,13 @@
 ios_calendar
 ============
 
-Calendar component based on iOS7 design.<br>
+Calendar component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
 <br>
+Using popover:
+<br><br>
+![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
+<br><br>
 <b>How to use:</b>
 <br>
 Add to your project source files: <br>
