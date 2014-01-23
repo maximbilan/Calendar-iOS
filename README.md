@@ -67,4 +67,7 @@ For more details there're optional methods for other things: <br>
 <br>
 Also you can see more screenshots in the img folder from repository.
 <br>
+Apps using calendar
+============
 
+<a href="https://itunes.apple.com/us/app/wymg/id769463031">Wymg</a> - Where your money goes? Want to know? Easiest way to track your expenses, use wymg. Designed with simplicity and usability. With just a few taps you can track your expense or check purchases.
