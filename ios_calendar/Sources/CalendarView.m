@@ -8,6 +8,7 @@
 
 #import "CalendarView.h"
 #import "NSDate+CalendarView.h"
+#import "NSString+CalendarView.h"
 
 #import <CoreText/CoreText.h>
 
@@ -366,7 +367,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSString *year = [NSString stringWithFormat:@"%ld",(long)currentYear];
 	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox)) * 0.5f;
     yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
-	[year drawInRect:yearTitleRect withAttributes:attributesRedLeft];
+	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
     if (mode!=CM_Years) {
         NSDateFormatter *formate = [NSDateFormatter new];
@@ -374,7 +375,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         NSString *monthName = monthNames[( currentMonth - 1 )];
         const CGFloat monthNameX = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox));
         monthTitleRect = CGRectMake(monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight);
-        [monthName drawInRect:monthTitleRect withAttributes:attributesRedRight];
+        [monthName drawUsingRect:monthTitleRect withAttributes:attributesRedRight];
     }
 	
     NSMutableArray *rects = nil;
@@ -425,7 +426,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
                 attrs = attributesBlack;
             }
             
-            [rect.str drawInRect:rectText withAttributes:attrs];
+            [rect.str drawUsingRect:rectText withAttributes:attrs];
         }
     }
 }
@@ -473,12 +474,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 		x = (i - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
 		
 		NSString *str = [NSString stringWithFormat:@"%@",weekdayNames[i]];
-		[str drawInRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
 	
 	NSString *strSunday = [NSString stringWithFormat:@"%@",weekdayNames[0]];
 	x = (CalendarViewDaysInWeek - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
-	[strSunday drawInRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+	[strSunday drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 }
 
 #pragma mark - Change date event

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		943BD1071892F92900CCE128 /* NSString+CalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 943BD1061892F92900CCE128 /* NSString+CalendarView.m */; };
 		94965937188F0DD300085A01 /* UIPopoverController+iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 94965936188F0DD300085A01 /* UIPopoverController+iPhone.m */; };
 		9496593A188F0F0600085A01 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94965939188F0F0600085A01 /* PopoverViewController.m */; };
 		94E614D01874405400BD4D9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94E614CF1874405400BD4D9F /* Foundation.framework */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		943BD1051892F92900CCE128 /* NSString+CalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+CalendarView.h"; path = "Sources/NSString+CalendarView.h"; sourceTree = "<group>"; };
+		943BD1061892F92900CCE128 /* NSString+CalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+CalendarView.m"; path = "Sources/NSString+CalendarView.m"; sourceTree = "<group>"; };
 		94965935188F0DD300085A01 /* UIPopoverController+iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIPopoverController+iPhone.h"; sourceTree = "<group>"; };
 		94965936188F0DD300085A01 /* UIPopoverController+iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIPopoverController+iPhone.m"; sourceTree = "<group>"; };
 		94965938188F0F0600085A01 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
@@ -130,6 +133,8 @@
 				94E615091874410D00BD4D9F /* CalendarView.m */,
 				94E6150A1874410D00BD4D9F /* NSDate+CalendarView.h */,
 				94E6150B1874410D00BD4D9F /* NSDate+CalendarView.m */,
+				943BD1051892F92900CCE128 /* NSString+CalendarView.h */,
+				943BD1061892F92900CCE128 /* NSString+CalendarView.m */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -202,6 +207,7 @@
 			files = (
 				94E614E91874405400BD4D9F /* ViewController.m in Sources */,
 				94E6150D1874410D00BD4D9F /* NSDate+CalendarView.m in Sources */,
+				943BD1071892F92900CCE128 /* NSString+CalendarView.m in Sources */,
 				94965937188F0DD300085A01 /* UIPopoverController+iPhone.m in Sources */,
 				94E614E01874405400BD4D9F /* AppDelegate.m in Sources */,
 				94E6150C1874410D00BD4D9F /* CalendarView.m in Sources */,
@@ -322,6 +328,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios_calendar/ios_calendar-Prefix.pch";
 				INFOPLIST_FILE = "ios_calendar/ios_calendar-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -335,6 +342,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios_calendar/ios_calendar-Prefix.pch";
 				INFOPLIST_FILE = "ios_calendar/ios_calendar-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
