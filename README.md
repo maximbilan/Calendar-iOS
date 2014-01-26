@@ -12,15 +12,15 @@ Using popover:
 <br>
 Add to your project source files: <br>
 <pre>
-  CalendarView.h
-  CalendarView.m
-  NSDate+CalendarView.h
-  NSDate+CalendarView.m
+CalendarView.h
+CalendarView.m
+NSDate+CalendarView.h
+NSDate+CalendarView.m
 </pre>
 You can add view in the Interface builder and set class to CalendarView or create in the code: <br>
 <pre>
-  CalendarView* cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
-  [self.view addSubview:cv];
+CalendarView* cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
+[self.view addSubview:cv];
 </pre>
 So, it's all, you should see the calendar view. <br>
 This component was created for iphone/ipod resolution, for ipad it's works, but it looks really small, if it's necessary, you can playing with static constants in the CalendarView.m, and maybe in future, will be done the scaling.
