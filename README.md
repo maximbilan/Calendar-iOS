@@ -1,4 +1,4 @@
-ios_calendar
+iOS Calendar
 ============
 
 Calendar component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
