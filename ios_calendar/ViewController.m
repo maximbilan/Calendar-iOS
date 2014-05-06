@@ -42,7 +42,7 @@
 
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event
 {
-    NSLog(@"didChangeCalendarDate:%@ withType:%ld withEvent:%d", date, (long)type, event);
+    NSLog(@"didChangeCalendarDate:%@ withType:%ld withEvent:%ld", date, (long)type, (long)event);
 }
 
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type
