@@ -19,7 +19,7 @@ NSDate+CalendarView.m
 </pre>
 You can add view in the Interface builder and set class to CalendarView or create in the code: <br>
 <pre>
-CalendarView* cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
+CalendarView *cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
 [self.view addSubview:cv];
 </pre>
 So, it's all, you should see the calendar view. <br>
