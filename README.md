@@ -1,7 +1,7 @@
 iOS Calendar
 ============
 
-Calendar component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
+Lightweight component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
 <br>
 Using popover:
@@ -64,8 +64,26 @@ For more details there're optional methods for other things: <br>
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
 </pre>
-Also you can see more screenshots in the img folder from repository.
 <br>
+<b>How to customize colors: </b><br>
+For customization of colors you can use the following properties:
+<pre>
+// Main color of numbers
+@property (nonatomic, strong) UIColor *fontColor;
+// Color of the headers (Year and month)
+@property (nonatomic, strong) UIColor *fontHeaderColor;
+// Color of selected numbers
+@property (nonatomic, strong) UIColor *fontSelectedColor;
+// Color of selection
+@property (nonatomic, strong) UIColor *selectionColor;
+</pre>
+For example:
+<pre>
+self.calendarView.selectionColor = [UIColor colorWithRed:0.203 green:0.666 blue:0.862 alpha:1.000];
+self.calendarView.fontHeaderColor = [UIColor colorWithRed:0.203 green:0.666 blue:0.862 alpha:1.000];
+</pre>
+And you can see the result:<br>
+![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img6.png)
 Apps using calendar
 ============
 
