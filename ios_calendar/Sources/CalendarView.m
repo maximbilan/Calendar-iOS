@@ -259,7 +259,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 		
         CalendarViewRect *dayRect = [[CalendarViewRect alloc] init];
         dayRect.value = i;
-        dayRect.str = [NSString stringWithFormat:@"%d", i];
+        dayRect.str = [NSString stringWithFormat:@"%ld", (long)i];
         dayRect.frame = CGRectMake(x, y, w, h);
         [dayRects addObject:dayRect];
         

@@ -42,12 +42,12 @@
 
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event
 {
-    NSLog(@"didChangeCalendarDate:%@ withType:%d withEvent:%d", date, type, event);
+    NSLog(@"didChangeCalendarDate:%@ withType:%ld withEvent:%d", date, (long)type, event);
 }
 
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type
 {
-    NSLog(@"didDoubleTapCalendar:%@ withType:%d", date, type);
+    NSLog(@"didDoubleTapCalendar:%@ withType:%ld", date, (long)type);
 }
 
 - (IBAction)popoverButtonAction:(UIButton *)sender
