@@ -140,7 +140,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     
     NSDate *now = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:now];
+    NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:now];
     
     currentDay = [components day];
     currentMonth = [components month];
@@ -180,14 +180,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             minType = CTDay;
         }
         break;
-            
         case CM_MonthsAndYears:
         {
             type = CTMonth;
             minType = CTMonth;
         }
         break;
-            
         case CM_Years:
         {
             type = CTYear;
@@ -205,8 +203,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)setCurrentDate:(NSDate *)currentDate
 {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:currentDate];
-    
+    NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:currentDate];
     currentDay = [components day];
     currentMonth = [components month];
     currentYear = [components year];
@@ -217,7 +214,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
 	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 	[calendar setTimeZone:timeZone];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]];
 	[components setYear:currentYear];
 	[components setMonth:currentMonth];
 	[components setDay:currentDay];
@@ -237,8 +234,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	
 	NSDate *now = [NSDate date];
 	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:now];
-	
+	NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:now];
 	[components setYear:currentYear];
 	[components setMonth:currentMonth];
 	[components setDay:currentDay];
@@ -279,8 +275,8 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 {
     [monthRects removeAllObjects];
     
-    NSDateFormatter *formate = [NSDateFormatter new];
-    NSArray *monthNames = [formate standaloneMonthSymbols];
+    NSDateFormatter *formater = [NSDateFormatter new];
+    NSArray *monthNames = [formater standaloneMonthSymbols];
     NSInteger index = 0;
     CGFloat x, y = CalendarViewMonthTitleOffsetY;
     NSInteger xi = 0;
@@ -364,15 +360,15 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
 	CFRelease(cellFont);
     
-	NSString *year = [NSString stringWithFormat:@"%ld",(long)currentYear];
-	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight( cellFontBoundingBox)) * 0.5f;
+	NSString *year = [NSString stringWithFormat:@"%ld", (long)currentYear];
+	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5f;
     yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
 	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
-    if (mode!=CM_Years) {
-        NSDateFormatter *formate = [NSDateFormatter new];
-        NSArray *monthNames = [formate standaloneMonthSymbols];
-        NSString *monthName = monthNames[( currentMonth - 1 )];
+    if (mode != CM_Years) {
+        NSDateFormatter *formater = [NSDateFormatter new];
+        NSArray *monthNames = [formater standaloneMonthSymbols];
+        NSString *monthName = monthNames[(currentMonth - 1)];
         const CGFloat monthNameX = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox));
         monthTitleRect = CGRectMake(monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight);
         [monthName drawUsingRect:monthTitleRect withAttributes:attributesRedRight];
@@ -469,11 +465,9 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGFloat y = CalendarViewWeekDaysYOffset;
 	const CGFloat w = CalendarViewDayCellWidth;
 	const CGFloat h = CalendarViewDayCellHeight;
-	
 	for (int i = 1; i < CalendarViewDaysInWeek; ++i) {
 		x = (i - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
-		
-		NSString *str = [NSString stringWithFormat:@"%@",weekdayNames[i]];
+		NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
 		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
 	
@@ -553,13 +547,11 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             [self generateDayRects];
         }
         break;
-            
         case CTMonth:
         {
             --currentYear;
         }
         break;
-            
         case CTYear:
         {
             currentYear -= CalendarViewYearsAround;
@@ -605,7 +597,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     CGPoint touchPoint = [recognizer locationInView:self];
     
     if (CGRectContainsPoint(yearTitleRect, touchPoint)) {
-        if (type!=CTYear) {
+        if (type != CTYear) {
             type = CTYear;
             [self fade];
         }
@@ -613,7 +605,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     }
     
     if (CGRectContainsPoint(monthTitleRect, touchPoint)) {
-        if (type!=CTMonth) {
+        if (type != CTMonth) {
             type = CTMonth;
             [self fade];
         }
@@ -657,7 +649,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     }
     
     NSDate *currentDate = [self currentDate];
-    if (event==CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
+    if (event == CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
         [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
     }
 }
@@ -667,7 +659,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 - (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value
 {
     for (CalendarViewRect *rect in array) {
-        if (CGRectContainsPoint( rect.frame, point)) {
+        if (CGRectContainsPoint(rect.frame, point)) {
             *value = rect.value;
             return YES;
         }
