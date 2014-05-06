@@ -120,6 +120,15 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     [self setup];
 }
 
+- (void)dealloc
+{
+    self.currentDate = nil;
+    self.fontColor = nil;
+    self.fontHeaderColor = nil;
+    self.fontSelectedColor = nil;
+    self.selectionColor = nil;
+}
+
 #pragma mark - Setup
 
 - (void)setup

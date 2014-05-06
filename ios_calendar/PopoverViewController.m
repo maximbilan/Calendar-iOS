@@ -21,6 +21,10 @@
     [super viewDidLoad];
     
     self.calendarView.calendarDelegate = self;
+    
+    // Custom colors
+    self.calendarView.selectionColor = [UIColor colorWithRed:0.203 green:0.666 blue:0.862 alpha:1.000];
+    self.calendarView.fontHeaderColor = [UIColor colorWithRed:0.203 green:0.666 blue:0.862 alpha:1.000];
 }
 
 - (void)didChangeCalendarDate:(NSDate *)date
