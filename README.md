@@ -64,7 +64,6 @@ For more details there're optional methods for other things: <br>
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
 </pre>
-<br>
 Also you can see more screenshots in the img folder from repository.
 <br>
 Apps using calendar
