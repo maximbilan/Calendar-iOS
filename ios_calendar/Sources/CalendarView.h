@@ -79,4 +79,9 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 @property (nonatomic, weak) NSDate *currentDate;
 
+@property (nonatomic, weak) UIColor *fontColor;
+@property (nonatomic, weak) UIColor *fontHeaderColor;
+@property (nonatomic, weak) UIColor *fontSelectedColor;
+@property (nonatomic, weak) UIColor *selectionColor;
+
 @end

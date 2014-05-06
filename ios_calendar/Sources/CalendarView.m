@@ -53,13 +53,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 @implementation CalendarViewRect;
 
-@synthesize value;
-@synthesize str;
-@synthesize frame;
-
 @end
 
 @interface CalendarView ()
+{
+    UIColor *bgColor;
+}
 
 - (void)setup;
 
@@ -86,8 +85,6 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 @end
 
 @implementation CalendarView
-
-@synthesize calendarDelegate = _calendarDelegate;
 
 #pragma mark - Initialization
 
@@ -133,6 +130,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     
     yearTitleRect = CGRectMake(0, 0, 0, 0);
     monthTitleRect = CGRectMake(0, 0, 0, 0);
+    
+    self.fontColor = [UIColor blackColor];
+    self.fontHeaderColor = [UIColor redColor];
+    self.fontSelectedColor = [UIColor whiteColor];
+    self.selectionColor = [UIColor redColor];
+    bgColor = [UIColor whiteColor];
     
     event = CE_None;
     
@@ -333,27 +336,27 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextClearRect(context, rect);
 	
-	CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
+	CGContextSetFillColorWithColor(context, bgColor.CGColor);
 	CGContextFillRect(context, rect);
     
 	NSDictionary *attributesBlack = [self generateAttributes:CalendarViewDefaultFont
 												withFontSize:CalendarViewDayFontSize
-												   withColor:[UIColor blackColor]
+												   withColor:self.fontColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
 	NSDictionary *attributesWhite = [self generateAttributes:CalendarViewDefaultFont
 												withFontSize:CalendarViewDayFontSize
-												   withColor:[UIColor whiteColor]
+												   withColor:self.fontSelectedColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
     
 	NSDictionary *attributesRedRight = [self generateAttributes:CalendarViewDefaultFont
 												   withFontSize:CalendarViewHeaderFontSize
-													  withColor:[UIColor redColor]
+													  withColor:self.fontHeaderColor
 												  withAlignment:NSTextAlignmentFromCTTextAlignment(kCTRightTextAlignment)];
 	
 	NSDictionary *attributesRedLeft = [self generateAttributes:CalendarViewDefaultFont
 												  withFontSize:CalendarViewHeaderFontSize
-													 withColor:[UIColor redColor]
+													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
 	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)CalendarViewDefaultFont, CalendarViewDayFontSize, NULL);
@@ -361,7 +364,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	CFRelease(cellFont);
     
 	NSString *year = [NSString stringWithFormat:@"%ld", (long)currentYear];
-	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5f;
+	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5;
     yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
 	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
@@ -407,7 +410,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         for (CalendarViewRect *rect in rects) {
             NSDictionary *attrs = nil;
             CGRect rectText = rect.frame;
-            rectText.origin.y = rectText.origin.y + (( CGRectGetHeight(rectText) - CGRectGetHeight( cellFontBoundingBox) ) * 0.5 );
+            rectText.origin.y = rectText.origin.y + ((CGRectGetHeight(rectText) - CGRectGetHeight(cellFontBoundingBox)) * 0.5);
             
             if (rect.value == currentValue) {
                 if (type == CTDay) {
@@ -418,7 +421,8 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
                 }
                 
                 attrs = attributesWhite;
-            } else {
+            }
+            else {
                 attrs = attributesBlack;
             }
             
@@ -429,13 +433,13 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context
 {
-    CGContextSetFillColorWithColor(*context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(*context, self.selectionColor.CGColor);
     CGContextFillEllipseInRect(*context, rect);
 }
 
 - (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef *)context
 {
-    CGContextSetFillColorWithColor(*context, [UIColor redColor].CGColor);
+    CGContextSetFillColorWithColor(*context, self.selectionColor.CGColor);
     
     CGFloat minx = CGRectGetMinX(rect), midx = CGRectGetMidX(rect), maxx = CGRectGetMaxX(rect);
     CGFloat miny = CGRectGetMinY(rect), midy = CGRectGetMidY(rect), maxy = CGRectGetMaxY(rect);
@@ -447,7 +451,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     CGContextAddArcToPoint(*context, minx, maxy, minx, midy, CalendarViewSelectionRound);
     CGContextClosePath(*context);
     
-    CGContextSetStrokeColorWithColor(*context, [UIColor redColor].CGColor);
+    CGContextSetStrokeColorWithColor(*context, self.selectionColor.CGColor);
     CGContextDrawPath(*context, kCGPathFillStroke);
 }
 
@@ -458,7 +462,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	
 	NSDictionary *attrs = [self generateAttributes:CalendarViewDefaultFont
 									  withFontSize:CalendarViewDayFontSize
-										 withColor:[UIColor blackColor]
+										 withColor:self.fontColor
 									 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
 	CGFloat x = 0;
