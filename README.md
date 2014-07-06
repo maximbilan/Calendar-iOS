@@ -85,3 +85,4 @@ self.calendarView.fontHeaderColor = [UIColor colorWithRed:0.203 green:0.666 blue
 And you can see the result:<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img6.png)<br>
 It's free for using, feel free. And I hope it will be helpful.
+More information about this you can found <a href="http://www.maximbilan.com.ua/ios-7-calendar-component/">here</a>.  
