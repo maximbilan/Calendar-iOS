@@ -1,7 +1,7 @@
 iOS Calendar
 ============
 
-Lightweight component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
+It's lightweight and simple component based on iOS7 design. There're samples for iphone and ipad, and also with using popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
 <br>
 Using popover:
@@ -84,7 +84,5 @@ self.calendarView.fontHeaderColor = [UIColor colorWithRed:0.203 green:0.666 blue
 </pre>
 And you can see the result:<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img6.png)
-Apps using calendar
-============
 
-<a href="https://itunes.apple.com/us/app/wymg/id769463031">Wymg</a> - Where your money goes? Want to know? Easiest way to track your expenses, use wymg. Designed with simplicity and usability. With just a few taps you can track your expense or check purchases.
+It's free for using, feel free. And I hope it will be helpful.
