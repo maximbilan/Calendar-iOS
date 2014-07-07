@@ -661,6 +661,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         [self fade];
     }
     
+    if (type == CTDay) {
+        [self generateDayRects];
+    }
+    
     NSDate *currentDate = [self currentDate];
     if (event == CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
         [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
