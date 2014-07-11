@@ -214,11 +214,13 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)setCurrentDate:(NSDate *)currentDate
 {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:currentDate];
-    currentDay = [components day];
-    currentMonth = [components month];
-    currentYear = [components year];
+    if (currentDate) {
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:currentDate];
+        currentDay = [components day];
+        currentMonth = [components month];
+        currentYear = [components year];
+    }
 }
 
 - (NSDate *)currentDate
