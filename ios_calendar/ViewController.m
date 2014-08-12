@@ -33,6 +33,11 @@
 	popover.delegate = self;
     
     self.calendarView.calendarDelegate = self;
+    
+    // For testing setCurrentDate property
+//    NSDate *d = [NSDate dateWithTimeIntervalSinceNow:-99656988];
+//    NSLog(@"%@", d);
+//    [self.calendarView setCurrentDate:d];
 }
 
 - (void)didChangeCalendarDate:(NSDate *)date
