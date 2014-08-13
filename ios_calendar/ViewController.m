@@ -34,10 +34,17 @@
     
     self.calendarView.calendarDelegate = self;
     
-    // For testing setCurrentDate property
+//    // For testing setCurrentDate property
 //    NSDate *d = [NSDate dateWithTimeIntervalSinceNow:-99656988];
 //    NSLog(@"%@", d);
 //    [self.calendarView setCurrentDate:d];
+    
+//    NSDateComponents *comps = [[NSDateComponents alloc] init];
+//    comps.year = 2015;
+//    comps.month= 1;
+//    comps.day = 1;
+//    NSDate *toDate = [[NSCalendar currentCalendar] dateFromComponents:comps];
+//    [self.calendarView setCurrentDate:toDate];
 }
 
 - (void)didChangeCalendarDate:(NSDate *)date

@@ -20,8 +20,8 @@
 
 - (NSInteger)getWeekdayOfFirstDayOfMonth
 {
-	NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-	
+	NSTimeZone *timeZone = [NSTimeZone localTimeZone];
+
 	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 	[calendar setTimeZone:timeZone];
 	NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:self];

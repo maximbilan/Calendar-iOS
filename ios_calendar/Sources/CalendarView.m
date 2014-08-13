@@ -223,6 +223,17 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         currentMonth = [components month];
         currentYear = [components year];
         
+        switch (type) {
+            case CTDay:
+                [self generateDayRects];
+                break;
+            case CTYear:
+                [self generateYearRects];
+                break;
+            default:
+                break;
+        }
+        
         _currentDate = date;
         
         if (![_currentDate isEqualToDate:date]) {
