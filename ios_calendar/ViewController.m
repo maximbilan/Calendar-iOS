@@ -67,4 +67,14 @@
     [popover presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 }
 
+- (IBAction)buttonTap:(id)sender
+{
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    comps.year = 2015;
+    comps.month= 1;
+    comps.day = 1;
+    NSDate *toDate = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    [self.calendarView setCurrentDate:toDate];
+}
+
 @end

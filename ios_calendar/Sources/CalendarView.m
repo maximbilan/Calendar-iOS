@@ -234,11 +234,9 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
                 break;
         }
         
-        _currentDate = date;
+        [self fade];
         
-        if (![_currentDate isEqualToDate:date]) {
-            [self setNeedsDisplay];
-        }
+        _currentDate = date;
     }
 }
 
