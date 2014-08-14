@@ -69,11 +69,12 @@
 
 - (IBAction)buttonTap:(id)sender
 {
+    NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *comps = [[NSDateComponents alloc] init];
-    comps.year = 2015;
-    comps.month= 1;
-    comps.day = 1;
-    NSDate *toDate = [[NSCalendar currentCalendar] dateFromComponents:comps];
+    comps.year = 2014;
+    comps.month= 9;
+    comps.day = 15;
+    NSDate *toDate = [cal dateFromComponents:comps];
     [self.calendarView setCurrentDate:toDate];
 }
 
