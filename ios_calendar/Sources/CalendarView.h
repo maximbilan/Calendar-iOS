@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
     CGRect monthTitleRect;
 }
 
-- (id)initWithPosition:(CGFloat)x y:(CGFloat)y;
+- (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y;
 - (void)setMode:(NSInteger)m;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;

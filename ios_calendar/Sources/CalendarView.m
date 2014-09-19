@@ -90,13 +90,13 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 #pragma mark - Initialization
 
-- (id)init
+- (instancetype)init
 {
 	self = [self initWithPosition:0.0 y:0.0];
 	return self;
 }
 
-- (id)initWithPosition:(CGFloat)x y:(CGFloat)y
+- (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y
 {
 	const CGFloat width = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek;
 	const CGFloat height = (CalendarViewDayCellHeight + CalendarViewDayCellOffset) * CalendarViewMaxLinesCount + CalendarViewDaysYOffset;
@@ -106,7 +106,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {

@@ -10,7 +10,7 @@
 
 @interface NSDate (CalendarView)
 
-- (NSUInteger)getLastDayOfMonth;
-- (NSInteger)getWeekdayOfFirstDayOfMonth;
+@property (NS_NONATOMIC_IOSONLY, getter=getLastDayOfMonth, readonly) NSUInteger lastDayOfMonth;
+@property (NS_NONATOMIC_IOSONLY, getter=getWeekdayOfFirstDayOfMonth, readonly) NSInteger weekdayOfFirstDayOfMonth;
 
 @end
