@@ -36,6 +36,10 @@
     
     self.calendarView.dayCellWidth = 65;
     self.calendarView.dayCellHeight = 65;
+    self.calendarView.monthCellWidth = 160;
+    self.calendarView.monthCellHeight = 60;
+    self.calendarView.yearCellWidth = 98;
+    self.calendarView.yearCellHeight = 60;
     [self.calendarView refresh];
 }
 

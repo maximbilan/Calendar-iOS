@@ -89,5 +89,9 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 // Cell Size
 @property (nonatomic) CGFloat dayCellWidth;
 @property (nonatomic) CGFloat dayCellHeight;
+@property (nonatomic) CGFloat monthCellWidth;
+@property (nonatomic) CGFloat monthCellHeight;
+@property (nonatomic) CGFloat yearCellWidth;
+@property (nonatomic) CGFloat yearCellHeight;
 
 @end

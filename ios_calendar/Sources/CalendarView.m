@@ -137,6 +137,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 {
     self.dayCellWidth = CalendarViewDayCellWidth;
     self.dayCellHeight = CalendarViewDayCellHeight;
+    self.monthCellWidth = CalendarViewMonthCellWidth;
+    self.monthCellHeight = CalendarViewMonthCellHeight;
+    self.yearCellWidth = CalendarViewYearCellWidth;
+    self.yearCellHeight = CalendarViewYearCellHeight;
     
     dayRects = [[NSMutableArray alloc] init];
     monthRects = [[NSMutableArray alloc] init];
@@ -330,14 +334,14 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     CGFloat x, y = CalendarViewMonthTitleOffsetY;
     NSInteger xi = 0;
     for (NSString *monthName in monthNames) {
-        x = xi * CalendarViewMonthCellWidth;
+        x = xi * self.monthCellWidth;
         ++xi;
         ++index;
         
         CalendarViewRect *monthRect = [[CalendarViewRect alloc] init];
         monthRect.value = index;
         monthRect.str = monthName;
-        monthRect.frame = CGRectMake(x, y, CalendarViewMonthCellWidth, CalendarViewMonthCellHeight);
+        monthRect.frame = CGRectMake(x, y, self.monthCellWidth, self.monthCellHeight);
         [monthRects addObject:monthRect];
         
         if (xi >= CalendarViewMonthInLine) {
@@ -359,13 +363,13 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     CGFloat x, y = CalendarViewYearTitleOffsetY;
     NSInteger xi = 0;
     for (NSNumber *obj in years) {
-        x = xi * CalendarViewYearCellWidth;
+        x = xi * self.yearCellWidth;
         ++xi;
         
         CalendarViewRect *yearRect = [[CalendarViewRect alloc] init];
         yearRect.value = [obj integerValue];
         yearRect.str = [NSString stringWithFormat:@"%ld", (long)[obj integerValue]];
-        yearRect.frame = CGRectMake(x, y, CalendarViewYearCellWidth, CalendarViewYearCellHeight);
+        yearRect.frame = CGRectMake(x, y, self.yearCellWidth, self.yearCellHeight);
         [yearRects addObject:yearRect];
         
         if (xi >= CalendarViewYearsInLine) {
