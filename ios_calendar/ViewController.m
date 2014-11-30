@@ -33,6 +33,10 @@
 	popover.delegate = self;
     
     self.calendarView.calendarDelegate = self;
+    
+    self.calendarView.dayCellWidth = 65;
+    self.calendarView.dayCellHeight = 65;
+    [self.calendarView refresh];
 }
 
 - (void)didChangeCalendarDate:(NSDate *)date

@@ -135,6 +135,9 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)setup
 {
+    self.dayCellWidth = CalendarViewDayCellWidth;
+    self.dayCellHeight = CalendarViewDayCellHeight;
+    
     dayRects = [[NSMutableArray alloc] init];
     monthRects = [[NSMutableArray alloc] init];
     yearRects = [[NSMutableArray alloc] init];
@@ -212,6 +215,15 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
+#pragma mark - Refresh
+
+- (void)refresh
+{
+    [self generateDayRects];
+    [self generateMonthRects];
+    [self generateYearRects];
+}
+
 #pragma mark - Getting, setting current date
 
 - (void)setCurrentDate:(NSDate *)date
@@ -281,8 +293,8 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonth];
 	
 	const CGFloat yOffSet = CalendarViewDaysYOffset;
-	const CGFloat w = CalendarViewDayCellWidth;
-	const CGFloat h = CalendarViewDayCellHeight;
+	const CGFloat w = self.dayCellWidth;
+	const CGFloat h = self.dayCellHeight;
 	
 	CGFloat x = 0;
 	CGFloat y = yOffSet;
@@ -291,7 +303,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSInteger yi = 0;
 	
 	for (NSInteger i = 1; i <= lastDayOfMonth; ++i) {
-		x = xi * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
+		x = xi * (self.dayCellWidth + CalendarViewDayCellOffset);
 		++xi;
 		
         CalendarViewRect *dayRect = [[CalendarViewRect alloc] init];
@@ -303,7 +315,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 		if (xi >= CalendarViewDaysInWeek) {
 			xi = 0;
 			++yi;
-			y = yOffSet + yi * (CalendarViewDayCellHeight + CalendarViewDayCellOffset);
+			y = yOffSet + yi * (self.dayCellHeight + CalendarViewDayCellOffset);
 		}
 	}
 }
@@ -398,7 +410,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	CFRelease(cellFont);
     
 	NSString *year = [NSString stringWithFormat:@"%ld", (long)currentYear];
-	const CGFloat yearNameX = (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5;
+	const CGFloat yearNameX = (self.dayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5;
     yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
 	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
@@ -406,7 +418,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         NSDateFormatter *formater = [NSDateFormatter new];
         NSArray *monthNames = [formater standaloneMonthSymbols];
         NSString *monthName = monthNames[(currentMonth - 1)];
-        const CGFloat monthNameX = (CalendarViewDayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - (CalendarViewDayCellWidth - CGRectGetHeight(cellFontBoundingBox));
+        const CGFloat monthNameX = (self.dayCellWidth + CalendarViewDayCellOffset) * CalendarViewDaysInWeek - CalendarViewMonthLabelWidth - (self.dayCellWidth - CGRectGetHeight(cellFontBoundingBox));
         monthTitleRect = CGRectMake(monthNameX, 0, CalendarViewMonthLabelWidth, CalendarViewMonthLabelHeight);
         [monthName drawUsingRect:monthTitleRect withAttributes:attributesRedRight];
     }
@@ -501,16 +513,16 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 	
 	CGFloat x = 0;
 	CGFloat y = CalendarViewWeekDaysYOffset;
-	const CGFloat w = CalendarViewDayCellWidth;
-	const CGFloat h = CalendarViewDayCellHeight;
+	const CGFloat w = self.dayCellWidth;
+	const CGFloat h = self.dayCellHeight;
 	for (int i = 1; i < CalendarViewDaysInWeek; ++i) {
-		x = (i - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
+		x = (i - 1) * (self.dayCellWidth + CalendarViewDayCellOffset);
 		NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
 		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
 	
 	NSString *strSunday = [NSString stringWithFormat:@"%@",weekdayNames[0]];
-	x = (CalendarViewDaysInWeek - 1) * (CalendarViewDayCellWidth + CalendarViewDayCellOffset);
+	x = (CalendarViewDaysInWeek - 1) * (self.dayCellWidth + CalendarViewDayCellOffset);
 	[strSunday drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 }
 
