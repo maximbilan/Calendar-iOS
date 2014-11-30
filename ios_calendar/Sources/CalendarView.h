@@ -75,13 +75,23 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 
 - (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y;
 - (void)setMode:(NSInteger)m;
+- (void)refresh;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 @property (nonatomic, strong) NSDate *currentDate;
 
+// Colors
 @property (nonatomic, strong) UIColor *fontColor;
 @property (nonatomic, strong) UIColor *fontHeaderColor;
 @property (nonatomic, strong) UIColor *fontSelectedColor;
 @property (nonatomic, strong) UIColor *selectionColor;
+
+// Cell Size
+@property (nonatomic) CGFloat dayCellWidth;
+@property (nonatomic) CGFloat dayCellHeight;
+@property (nonatomic) CGFloat monthCellWidth;
+@property (nonatomic) CGFloat monthCellHeight;
+@property (nonatomic) CGFloat yearCellWidth;
+@property (nonatomic) CGFloat yearCellHeight;
 
 @end
