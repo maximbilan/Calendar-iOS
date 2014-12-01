@@ -94,4 +94,9 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property (nonatomic) CGFloat yearCellWidth;
 @property (nonatomic) CGFloat yearCellHeight;
 
+// Font Size
+@property (nonatomic, strong) NSString *fontName;
+@property (nonatomic) CGFloat dayFontSize;
+@property (nonatomic) CGFloat headerFontSize;
+
 @end
