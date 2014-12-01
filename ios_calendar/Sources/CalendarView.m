@@ -129,6 +129,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     self.fontHeaderColor = nil;
     self.fontSelectedColor = nil;
     self.selectionColor = nil;
+    self.fontName = nil;
 }
 
 #pragma mark - Setup
@@ -141,6 +142,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     self.monthCellHeight = CalendarViewMonthCellHeight;
     self.yearCellWidth = CalendarViewYearCellWidth;
     self.yearCellHeight = CalendarViewYearCellHeight;
+    
+    self.fontName = CalendarViewDefaultFont;
+    self.dayFontSize = CalendarViewDayFontSize;
+    self.headerFontSize = CalendarViewHeaderFontSize;
     
     dayRects = [[NSMutableArray alloc] init];
     monthRects = [[NSMutableArray alloc] init];
