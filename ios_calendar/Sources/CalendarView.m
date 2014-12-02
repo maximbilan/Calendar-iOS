@@ -160,9 +160,9 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     self.selectionColor = [UIColor redColor];
     bgColor = [UIColor whiteColor];
     
-    event = CE_None;
+    event = CalendarEventNone;
     
-    [self setMode:CM_Default];
+    [self setMode:CalendarModeDefault];
     
     NSDate *now = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
@@ -200,22 +200,22 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 {
     mode = m;
     switch (mode) {
-        case CM_Default:
+        case CalendarModeDefault:
         {
-            type = CTDay;
-            minType = CTDay;
+            type = CalendarViewTypeDay;
+            minType = CalendarViewTypeDay;
         }
         break;
-        case CM_MonthsAndYears:
+        case CalendarModeMonthsAndYears:
         {
-            type = CTMonth;
-            minType = CTMonth;
+            type = CalendarViewTypeMonth;
+            minType = CalendarViewTypeMonth;
         }
         break;
-        case CM_Years:
+        case CalendarModeYears:
         {
-            type = CTYear;
-            minType = CTYear;
+            type = CalendarViewTypeYear;
+            minType = CalendarViewTypeYear;
         }
         break;
             
@@ -245,10 +245,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
         currentYear = [components year];
         
         switch (type) {
-            case CTDay:
+            case CalendarViewTypeDay:
                 [self generateDayRects];
                 break;
-            case CTYear:
+            case CalendarViewTypeYear:
                 [self generateYearRects];
                 break;
             default:
@@ -423,7 +423,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     yearTitleRect = CGRectMake(yearNameX, 0, CalendarViewYearLabelWidth, CalendarViewYearLabelHeight);
 	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
-    if (mode != CM_Years) {
+    if (mode != CalendarModeYears) {
         NSDateFormatter *formater = [NSDateFormatter new];
         NSArray *monthNames = [formater standaloneMonthSymbols];
         NSString *monthName = monthNames[(currentMonth - 1)];
@@ -436,7 +436,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger currentValue = 0;
     
     switch (type) {
-        case CTDay:
+        case CalendarViewTypeDay:
         {
             [self drawWeekDays];
             
@@ -444,13 +444,13 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             currentValue = currentDay;
         }
         break;
-        case CTMonth:
+        case CalendarViewTypeMonth:
         {
             rects = monthRects;
             currentValue = currentMonth;
         }
         break;
-        case CTYear:
+        case CalendarViewTypeYear:
         {
             rects = yearRects;
             currentValue = currentYear;
@@ -468,7 +468,7 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             rectText.origin.y = rectText.origin.y + ((CGRectGetHeight(rectText) - CGRectGetHeight(cellFontBoundingBox)) * 0.5);
             
             if (rect.value == currentValue) {
-                if (type == CTDay) {
+                if (type == CalendarViewTypeDay) {
                     [self drawCircle:rect.frame toContext:&context];
                 }
                 else {
@@ -552,10 +552,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
 {
-    event = CE_SwipeLeft;
+    event = CalendarEventSwipeLeft;
     
     switch (type) {
-        case CTDay:
+        case CalendarViewTypeDay:
         {
             if (currentMonth == CalendarViewMonthInYear) {
                 currentMonth = 1;
@@ -568,12 +568,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             [self generateDayRects];
         }
         break;
-        case CTMonth:
+        case CalendarViewTypeMonth:
         {
             ++currentYear;
         }
         break;
-        case CTYear:
+        case CalendarViewTypeYear:
         {
             currentYear += CalendarViewYearsAround;
             [self generateYearRects];
@@ -590,10 +590,10 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
 {
-    event = CE_SwipeRight;
+    event = CalendarEventSwipeRight;
     
     switch (type) {
-        case CTDay:
+        case CalendarViewTypeDay:
         {
             if (currentMonth == 1) {
                 currentMonth = CalendarViewMonthInYear;
@@ -606,12 +606,12 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
             [self generateDayRects];
         }
         break;
-        case CTMonth:
+        case CalendarViewTypeMonth:
         {
             --currentYear;
         }
         break;
-        case CTYear:
+        case CalendarViewTypeYear:
         {
             currentYear -= CalendarViewYearsAround;
             [self generateYearRects];
@@ -631,14 +631,14 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         NSInteger t = type;
         if (recognizer.velocity < 0) {
-            event = CE_PinchIn;
+            event = CalendarEventPinchIn;
             if (t - 1 >= minType) {
                 --t;
             }
         }
         else {
-            event = CE_PinchOut;
-            if (t + 1 < CT_Count) {
+            event = CalendarEventPinchOut;
+            if (t + 1 < CalendarViewTypeCount) {
                 ++t;
             }
         }
@@ -652,20 +652,20 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)tap:(UITapGestureRecognizer *)recognizer
 {
-    event = CE_Tap;
+    event = CalendarEventTap;
     CGPoint touchPoint = [recognizer locationInView:self];
     
     if (CGRectContainsPoint(yearTitleRect, touchPoint)) {
-        if (type != CTYear) {
-            type = CTYear;
+        if (type != CalendarViewTypeYear) {
+            type = CalendarViewTypeYear;
             [self fade];
         }
         return;
     }
     
     if (CGRectContainsPoint(monthTitleRect, touchPoint)) {
-        if (type != CTMonth) {
-            type = CTMonth;
+        if (type != CalendarViewTypeMonth) {
+            type = CalendarViewTypeMonth;
             [self fade];
         }
         return;
@@ -673,17 +673,17 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
     
     BOOL hasEvent = NO;
     switch (type) {
-        case CTDay:
+        case CalendarViewTypeDay:
         {
             hasEvent = [self checkPoint:touchPoint inArray:dayRects andSetValue:&currentDay];
         }
         break;
-        case CTMonth:
+        case CalendarViewTypeMonth:
         {
             hasEvent = [self checkPoint:touchPoint inArray:monthRects andSetValue:&currentMonth];
         }
         break;
-        case CTYear:
+        case CalendarViewTypeYear:
         {
             hasEvent = [self checkPoint:touchPoint inArray:yearRects andSetValue:&currentYear];
         }
@@ -701,18 +701,18 @@ static const NSTimeInterval CalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer
 {
-    event = CE_DoubleTap;
-    if (type != CTDay && type > minType) {
+    event = CalendarEventDoubleTap;
+    if (type != CalendarViewTypeDay && type > minType) {
         --type;
         [self fade];
     }
     
-    if (type == CTDay) {
+    if (type == CalendarViewTypeDay) {
         [self generateDayRects];
     }
     
     NSDate *currentDate = [self currentDate];
-    if (event == CE_DoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
+    if (event == CalendarEventDoubleTap && _calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didDoubleTapCalendar:withType:)]) {
         [_calendarDelegate didDoubleTapCalendar:currentDate withType:type];
     }
 }
