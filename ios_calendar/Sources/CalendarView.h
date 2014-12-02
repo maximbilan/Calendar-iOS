@@ -10,29 +10,29 @@
 
 typedef NS_ENUM(NSInteger, CalendarViewType)
 {
-    CTDay,
-    CTMonth,
-    CTYear,
+    CalendarViewTypeDay,
+    CalendarViewTypeMonth,
+    CalendarViewTypeYear,
     
-    CT_Count
+    CalendarViewTypeCount
 };
 
 typedef NS_ENUM(NSInteger, CalendarMode)
 {
-    CM_Default,
-    CM_MonthsAndYears,
-    CM_Years
+    CalendarModeDefault,
+    CalendarModeMonthsAndYears,
+    CalendarModeYears
 };
 
 typedef NS_ENUM(NSInteger, CalendarEvent)
 {
-    CE_None,
-    CE_Tap,
-    CE_DoubleTap,
-    CE_SwipeLeft,
-    CE_SwipeRight,
-    CE_PinchIn,
-    CE_PinchOut
+    CalendarEventNone,
+    CalendarEventTap,
+    CalendarEventDoubleTap,
+    CalendarEventSwipeLeft,
+    CalendarEventSwipeRight,
+    CalendarEventPinchIn,
+    CalendarEventPinchOut
 };
 
 @interface CalendarViewRect : NSObject
