@@ -29,9 +29,9 @@ This calendar has some modes: <br>
 <pre>
 typedef NS_ENUM(NSInteger, CalendarMode)
 {
-    CM_Default,
-    CM_MonthsAndYears,
-    CM_Years
+    CalendarModeDefault,
+    CalendarModeMonthsAndYears,
+    CalendarModeYears
 };
 </pre>
 <i>Default</i> - there're days, months and years, the user can change monthes with help swipe gesture or pinch gesture for transitions in the calendar <br>
