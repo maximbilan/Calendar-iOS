@@ -55,23 +55,6 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @end
 
 @interface CalendarView : UIView
-{
-    NSInteger type;
-    NSInteger minType;
-    NSInteger mode;
-    NSInteger event;
-    
-	NSInteger currentDay;
-	NSInteger currentMonth;
-	NSInteger currentYear;
-	
-	NSMutableArray *dayRects;
-    NSMutableArray *monthRects;
-    NSMutableArray *yearRects;
-    
-    CGRect yearTitleRect;
-    CGRect monthTitleRect;
-}
 
 - (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y;
 - (void)setMode:(NSInteger)m;

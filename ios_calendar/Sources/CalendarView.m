@@ -57,6 +57,22 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 @interface CalendarView ()
 {
+    NSInteger type;
+    NSInteger minType;
+    NSInteger mode;
+    NSInteger event;
+    
+    NSInteger currentDay;
+    NSInteger currentMonth;
+    NSInteger currentYear;
+    
+    NSMutableArray *dayRects;
+    NSMutableArray *monthRects;
+    NSMutableArray *yearRects;
+    
+    CGRect yearTitleRect;
+    CGRect monthTitleRect;
+    
     UIColor *bgColor;
 }
 
