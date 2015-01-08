@@ -10,6 +10,7 @@ Using popover:
 <br><br>
 <b>How to use:</b>
 <br>
+<br>
 Add to your project source files: <br>
 <pre>
 CalendarView.h
