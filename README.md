@@ -17,6 +17,10 @@ CalendarView.m
 NSDate+CalendarView.h
 NSDate+CalendarView.m
 </pre>
+Or you can use the CocoaPods. Add the next to your podfile:
+<pre>
+pod 'Calendar-iOS'
+</pre>
 You can add view in the Interface builder and set class to CalendarView or create in the code: <br>
 <pre>
 CalendarView *cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
