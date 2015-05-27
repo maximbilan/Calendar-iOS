@@ -1,6 +1,10 @@
 iOS Calendar
 ============
 
+[![Version](https://img.shields.io/cocoapods/v/ios_calendar.svg?style=flat)](http://cocoadocs.org/docsets/ios_calendar)
+[![License](https://img.shields.io/cocoapods/l/ios_calendar.svg?style=flat)](http://cocoadocs.org/docsets/ios_calendar)
+[![Platform](https://img.shields.io/cocoapods/p/ios_calendar.svg?style=flat)](http://cocoadocs.org/docsets/ios_calendar)
+
 It's lightweight and simple control. There're samples for iphone and ipad, and also with using popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
 <br>
