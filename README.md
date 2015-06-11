@@ -14,7 +14,7 @@ Using popover:
 <br>
 ## Installation:
 <b>Manual:</b><br><br>
-Add to your project source files: <br>
+Add to your project the next source files: <br>
 <pre>
 CalendarView.h
 CalendarView.m
