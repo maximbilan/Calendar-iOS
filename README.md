@@ -13,7 +13,7 @@ Using popover:
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br>
 ## Installation:
-<b>Manual:</b><br>
+<b>Manual:</b><br><br>
 Add to your project source files: <br>
 <pre>
 CalendarView.h
@@ -46,7 +46,6 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 <i>Default</i> - there're days, months and years, the user can change monthes with help swipe gesture or pinch gesture for transitions in the calendar <br>
 <i>MonthsAndYears</i> - available months and years <br>
 <i>Years</i> - only years <br>
-<br>
 ## How to handle changing date event:
 For this you should use CalendarViewDelegate protocol:
 <pre>
@@ -73,7 +72,6 @@ For more details there're optional methods for other things: <br>
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
 </pre>
-<br>
 ## How to customize colors:
 For customization of colors you can use the following properties:
 <pre>
