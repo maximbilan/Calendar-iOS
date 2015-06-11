@@ -13,7 +13,7 @@ Using popover:
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br><br>
 ## Installation:
-<b>Manual</b>
+<b>Manual:</b>
 Add to your project source files: <br>
 <pre>
 CalendarView.h
@@ -21,10 +21,11 @@ CalendarView.m
 NSDate+CalendarView.h
 NSDate+CalendarView.m
 </pre>
-<b>Cocoapods</b>
+<b>Cocoapods:</b>
 <pre>
 pod 'Calendar-iOS'
 </pre>
+## How to use:
 You can add view in the Interface builder and set class to CalendarView or create in the code: <br>
 <pre>
 CalendarView *cv = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
