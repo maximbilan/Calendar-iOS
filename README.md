@@ -12,8 +12,8 @@ Using popover:
 <br><br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br><br>
-<b>How to use:</b>
-<br>
+## Installation:
+<b>Manual</b>
 Add to your project source files: <br>
 <pre>
 CalendarView.h
@@ -21,7 +21,7 @@ CalendarView.m
 NSDate+CalendarView.h
 NSDate+CalendarView.m
 </pre>
-Or you can use the CocoaPods. Add the next to your podfile:
+<b>Cocoapods</b>
 <pre>
 pod 'Calendar-iOS'
 </pre>
