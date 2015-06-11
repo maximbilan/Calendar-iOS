@@ -11,9 +11,9 @@ It's lightweight and simple control. There're samples for iphone and ipad, and a
 Using popover:
 <br><br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
-<br><br>
+<br>
 ## Installation:
-<b>Manual:</b>
+<b>Manual:</b><br>
 Add to your project source files: <br>
 <pre>
 CalendarView.h
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 <i>MonthsAndYears</i> - available months and years <br>
 <i>Years</i> - only years <br>
 <br>
-<b>How to handle changing date event: </b><br>
+## How to handle changing date event:
 For this you should use CalendarViewDelegate protocol:
 <pre>
 @interface ViewController : UIViewController &#60;CalendarViewDelegate&#62;
@@ -74,7 +74,7 @@ For more details there're optional methods for other things: <br>
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
 </pre>
 <br>
-<b>How to customize colors: </b><br>
+## How to customize colors:
 For customization of colors you can use the following properties:
 <pre>
 // Main color of numbers
