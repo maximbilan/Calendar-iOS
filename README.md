@@ -26,13 +26,13 @@ NSDate+CalendarView.m
 pod 'Calendar-iOS'
 </pre>
 ## How to use:
-You can add view in the Interface builder and set class to CalendarView or create in the code: <br>
+You can add view in the Interface builder and set class to <i>CalendarView</i> or create in the code: <br>
 <pre>
 CalendarView *calendarView = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
 [self.view addSubview:calendarView];
 </pre>
 So, it's all, you should see the calendar view. <br>
-This component was created for iphone/ipod resolution, for ipad it's works, but it looks really small, if it's necessary, you can playing with static constants in the CalendarView.m, and maybe in future, will be done the scaling.
+This component was created for iphone/ipod resolution, for ipad it's works, but it looks really small, if it's necessary, you can playing with static constants in the <i>CalendarView.m</i>, and maybe in future, will be done the scaling.
 <br>
 This calendar has some modes: <br>
 <pre>
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 <i>MonthsAndYears</i> - available months and years <br>
 <i>Years</i> - only years <br>
 ## How to handle changing date event:
-For this you should use CalendarViewDelegate protocol:
+For this you should use <i>CalendarViewDelegate</i> protocol:
 <pre>
 @interface ViewController : UIViewController &#60;CalendarViewDelegate&#62;
 
@@ -58,7 +58,7 @@ And setup delegate: <br>
 self.calendarView.calendarDelegate = self;
 </pre>
 
-After that you should implement required method didChangeCalendarDate:
+After that you should implement required method <i>didChangeCalendarDate</i>:
 <pre>
 - (void)didChangeCalendarDate:(NSDate *)date
 {
