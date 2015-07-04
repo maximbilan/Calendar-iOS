@@ -13,7 +13,7 @@ Using popover:
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br>
 ## Installation:
-<b>Manual:</b><br>
+<b>Manual:</b><br><br>
 Add to your project the next source files: <br>
 <pre>
 CalendarView.h
