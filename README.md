@@ -32,7 +32,7 @@ CalendarView *calendarView = [[CalendarView alloc] initWithPosition:10.0 y:10.0]
 [self.view addSubview:calendarView];
 </pre>
 So, it's all, you should see the calendar view. <br>
-This component was created for iphone/ipod resolution, for ipad it's works, but it looks really small, if it's necessary, you can playing with static constants in the <i>CalendarView.m</i>, and maybe in future, will be done the scaling.
+This component was created for iPhone/iPod resolution, for iPad it's works, but it looks really small, if it's necessary, you can playing with static constants in the <i>CalendarView.m</i>, and maybe in future, will be done the scaling.
 <br>
 This calendar has some modes: <br>
 <pre>
