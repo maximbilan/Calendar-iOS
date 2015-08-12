@@ -85,6 +85,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)generateDayRects;
 - (void)generateMonthRects;
 - (void)generateYearRects;
+- (CGFloat)getEffectiveWeekDaysYOffset;
+- (CGFloat)getEffectiveDaysYOffset;
+- (CGFloat)getEffectiveMonthsYOffset;
+- (CGFloat)getEffectiveYearsYOffset;
 
 - (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context withColor:(UIColor *)color;
 - (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef *)context;
@@ -330,7 +334,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     currentDate = [calendar dateFromComponents:components];
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonth];
 	
-	const CGFloat yOffSet = kCalendarViewDaysYOffset;
+	const CGFloat yOffSet = [self getEffectiveDaysYOffset];
 	const CGFloat w = self.dayCellWidth;
 	const CGFloat h = self.dayCellHeight;
 	
@@ -365,7 +369,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSDateFormatter *formater = [NSDateFormatter new];
     NSArray *monthNames = [formater standaloneMonthSymbols];
     NSInteger index = 0;
-    CGFloat x, y = kCalendarViewMonthTitleOffsetY;
+    CGFloat x, y = [self getEffectiveMonthsYOffset];
     NSInteger xi = 0;
     for (NSString *monthName in monthNames) {
         x = xi * self.monthCellWidth;
@@ -394,7 +398,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
         [years addObject:@(year)];
     }
     
-    CGFloat x, y = kCalendarViewYearTitleOffsetY;
+    CGFloat x, y = [self getEffectiveYearsYOffset];
     NSInteger xi = 0;
     for (NSNumber *obj in years) {
         x = xi * self.yearCellWidth;
@@ -411,6 +415,42 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             y += kCalendarViewYearYStep;
         }
     }
+}
+
+# pragma mark - Layout Calculations 
+
+- (CGFloat)getEffectiveWeekDaysYOffset
+{
+    if (self.shouldShowHeaders) {
+        return kCalendarViewWeekDaysYOffset;
+    } else {
+        return 0;
+    }
+}
+
+- (CGFloat)getEffectiveDaysYOffset
+{
+    if (self.shouldShowHeaders) {
+        return  kCalendarViewDaysYOffset;
+    } else {
+        return kCalendarViewDaysYOffset - kCalendarViewWeekDaysYOffset;
+    }
+}
+
+- (CGFloat)getEffectiveMonthsYOffset
+{
+    if (self.shouldShowHeaders) {
+        return kCalendarViewMonthTitleOffsetY;
+    } else {
+        return 0;
+    }
+}
+
+- (CGFloat)getEffectiveYearsYOffset
+{
+    if (self.shouldShowHeaders) {
+        return kCalendarViewYearTitleOffsetY;
+    } else return 0;
 }
 
 #pragma mark - Drawing
@@ -565,7 +605,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 									 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
 	CGFloat x = 0;
-	CGFloat y = kCalendarViewWeekDaysYOffset;
+	CGFloat y = [self getEffectiveWeekDaysYOffset];
 	const CGFloat w = self.dayCellWidth;
 	const CGFloat h = self.dayCellHeight;
 	for (int i = 1; i < kCalendarViewDaysInWeek; ++i) {
