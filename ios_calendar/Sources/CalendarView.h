@@ -59,6 +59,8 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 - (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y;
 - (void)setMode:(NSInteger)m;
 - (void)refresh;
+- (void)advanceCalendarContents;
+- (void)rewindCalendarContents;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 @property (nonatomic, strong) NSDate *currentDate;

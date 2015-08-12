@@ -632,12 +632,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
-#pragma mark - Gestures
+#pragma mark - Advance/Rewind Calendar Contents
 
-- (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
+- (void)advanceCalendarContents
 {
-    event = CalendarEventSwipeLeft;
-    
     switch (type) {
         case CalendarViewTypeDay:
         {
@@ -651,31 +649,29 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             
             [self generateDayRects];
         }
-        break;
+            break;
         case CalendarViewTypeMonth:
         {
             ++currentYear;
         }
-        break;
+            break;
         case CalendarViewTypeYear:
         {
             currentYear += kCalendarViewYearsAround;
             [self generateYearRects];
         }
-        break;
+            break;
             
         default:
             break;
     }
-	
-	[self changeDateEvent];
-	[self fade];
+    
+    [self changeDateEvent];
+    [self fade];
 }
 
-- (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
+- (void)rewindCalendarContents
 {
-    event = CalendarEventSwipeRight;
-    
     switch (type) {
         case CalendarViewTypeDay:
         {
@@ -689,25 +685,41 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             
             [self generateDayRects];
         }
-        break;
+            break;
         case CalendarViewTypeMonth:
         {
             --currentYear;
         }
-        break;
+            break;
         case CalendarViewTypeYear:
         {
             currentYear -= kCalendarViewYearsAround;
             [self generateYearRects];
         }
-        break;
+            break;
             
         default:
             break;
     }
     
-	[self changeDateEvent];
-	[self fade];
+    [self changeDateEvent];
+    [self fade];
+}
+
+#pragma mark - Gestures
+
+- (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    event = CalendarEventSwipeLeft;
+    
+    [self advanceCalendarContents];
+}
+
+- (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    event = CalendarEventSwipeRight;
+    
+    [self rewindCalendarContents];
 }
 
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer
