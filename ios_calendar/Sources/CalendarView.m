@@ -183,6 +183,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     self.shouldMarkSelectedDate = YES;
     self.shouldMarkToday = NO;
+    self.shouldShowHeaders = YES;
     
     event = CalendarEventNone;
     
@@ -448,7 +449,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
 	NSString *year = [NSString stringWithFormat:@"%ld", (long)currentYear];
 	const CGFloat yearNameX = (self.dayCellWidth - CGRectGetHeight(cellFontBoundingBox)) * 0.5;
-    yearTitleRect = CGRectMake(yearNameX, 0, kCalendarViewYearLabelWidth, kCalendarViewYearLabelHeight);
+    if (self.shouldShowHeaders) {
+        yearTitleRect = CGRectMake(yearNameX, 0, kCalendarViewYearLabelWidth, kCalendarViewYearLabelHeight);
+    } else {
+        yearTitleRect = CGRectZero;
+    }
 	[year drawUsingRect:yearTitleRect withAttributes:attributesRedLeft];
 	
     if (mode != CalendarModeYears) {
@@ -456,7 +461,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
         NSArray *monthNames = [formater standaloneMonthSymbols];
         NSString *monthName = monthNames[(currentMonth - 1)];
         const CGFloat monthNameX = (self.dayCellWidth + kCalendarViewDayCellOffset) * kCalendarViewDaysInWeek - kCalendarViewMonthLabelWidth - (self.dayCellWidth - CGRectGetHeight(cellFontBoundingBox));
-        monthTitleRect = CGRectMake(monthNameX, 0, kCalendarViewMonthLabelWidth, kCalendarViewMonthLabelHeight);
+        if (self.shouldShowHeaders) {
+            monthTitleRect = CGRectMake(monthNameX, 0, kCalendarViewMonthLabelWidth, kCalendarViewMonthLabelHeight);
+        } else {
+            monthTitleRect = CGRectZero;
+        }
         [monthName drawUsingRect:monthTitleRect withAttributes:attributesRedRight];
     }
 	

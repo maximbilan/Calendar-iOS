@@ -86,5 +86,6 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 // Selection Display Options
 @property (nonatomic, assign) BOOL shouldMarkSelectedDate;
 @property (nonatomic, assign) BOOL shouldMarkToday;
+@property (nonatomic, assign) BOOL shouldShowHeaders;
 
 @end
