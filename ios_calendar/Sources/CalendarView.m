@@ -66,6 +66,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger currentMonth;
     NSInteger currentYear;
     
+    NSInteger todayDay;
+    NSInteger todayMonth;
+    NSInteger todayYear;
+    
     NSMutableArray *dayRects;
     NSMutableArray *monthRects;
     NSMutableArray *yearRects;
@@ -82,7 +86,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)generateMonthRects;
 - (void)generateYearRects;
 
-- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context;
+- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context withColor:(UIColor *)color;
 - (void)drawRoundedRectangle:(CGRect)rect toContext:(CGContextRef *)context;
 - (void)drawWeekDays;
 
@@ -174,7 +178,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     self.fontHeaderColor = [UIColor redColor];
     self.fontSelectedColor = [UIColor whiteColor];
     self.selectionColor = [UIColor redColor];
+    self.todayColor = [UIColor redColor];
     bgColor = [UIColor whiteColor];
+    
+    self.shouldMarkSelectedDate = YES;
+    self.shouldMarkToday = NO;
     
     event = CalendarEventNone;
     
@@ -187,6 +195,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     currentDay = [components day];
     currentMonth = [components month];
     currentYear = [components year];
+    
+    todayDay = [components day];
+    todayMonth = [components month];
+    todayYear = [components year];
     
     UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe:)];
     [left setDirection:UISwipeGestureRecognizerDirectionLeft];
@@ -483,14 +495,21 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             CGRect rectText = rect.frame;
             rectText.origin.y = rectText.origin.y + ((CGRectGetHeight(rectText) - CGRectGetHeight(cellFontBoundingBox)) * 0.5);
             
-            if (rect.value == currentValue) {
+            if (rect.value == currentValue && self.shouldMarkSelectedDate) {
                 if (type == CalendarViewTypeDay) {
-                    [self drawCircle:rect.frame toContext:&context];
+                    [self drawCircle:rect.frame toContext:&context withColor:self.selectionColor];
                 }
                 else {
                     [self drawRoundedRectangle:rect.frame toContext:&context];
                 }
                 
+                attrs = attributesWhite;
+            } else if (type == CalendarViewTypeDay &&
+                       rect.value == todayDay &&
+                       currentMonth == todayMonth &&
+                       currentYear == todayYear &&
+                       self.shouldMarkToday) {
+                [self drawCircle:rect.frame toContext:&context withColor:self.todayColor];
                 attrs = attributesWhite;
             }
             else {
@@ -502,9 +521,9 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
-- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context
+- (void)drawCircle:(CGRect)rect toContext:(CGContextRef *)context withColor:(UIColor *)color
 {
-    CGContextSetFillColorWithColor(*context, self.selectionColor.CGColor);
+    CGContextSetFillColorWithColor(*context, color.CGColor);
     CGContextFillEllipseInRect(*context, rect);
 }
 
