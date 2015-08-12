@@ -102,6 +102,9 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)changeDateEvent;
 
+- (void)advanceCalendarContentsWithEvent:(CalendarEvent)eventType;
+- (void)rewindCalendarContentsWithEvent:(CalendarEvent)eventType;
+
 - (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment;
 - (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value;
 - (void)fade;
@@ -636,6 +639,18 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)advanceCalendarContents
 {
+    [self advanceCalendarContentsWithEvent:CalendarEventNone];
+}
+
+- (void)rewindCalendarContents
+{
+    [self rewindCalendarContentsWithEvent:CalendarEventNone];
+}
+
+- (void)advanceCalendarContentsWithEvent:(CalendarEvent)eventType
+{
+    event = eventType;
+    
     switch (type) {
         case CalendarViewTypeDay:
         {
@@ -670,8 +685,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     [self fade];
 }
 
-- (void)rewindCalendarContents
+- (void)rewindCalendarContentsWithEvent:(CalendarEvent)eventType
 {
+    event = eventType;
+    
     switch (type) {
         case CalendarViewTypeDay:
         {
@@ -710,16 +727,12 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)leftSwipe:(UISwipeGestureRecognizer *)recognizer
 {
-    event = CalendarEventSwipeLeft;
-    
-    [self advanceCalendarContents];
+    [self advanceCalendarContentsWithEvent:CalendarEventSwipeLeft];
 }
 
 - (void)rightSwipe:(UISwipeGestureRecognizer *)recognizer
 {
-    event = CalendarEventSwipeRight;
-    
-    [self rewindCalendarContents];
+    [self rewindCalendarContentsWithEvent:CalendarEventSwipeRight];
 }
 
 - (void)pinch:(UIPinchGestureRecognizer *)recognizer
