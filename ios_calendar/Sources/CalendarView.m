@@ -66,6 +66,8 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger currentMonth;
     NSInteger currentYear;
     
+    int preferredWeekStartIndex;
+    
     NSInteger todayDay;
     NSInteger todayMonth;
     NSInteger todayYear;
@@ -190,7 +192,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     self.shouldMarkSelectedDate = YES;
     self.shouldMarkToday = NO;
-    self.shouldShowHeaders = YES;
+    self.shouldShowHeaders = NO;
     
     event = CalendarEventNone;
     
@@ -207,6 +209,8 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     todayDay = [components day];
     todayMonth = [components month];
     todayYear = [components year];
+    
+    preferredWeekStartIndex = 1; // This is Monday, from [dateFormatter shortWeekdaySymbols]
     
     UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe:)];
     [left setDirection:UISwipeGestureRecognizerDirectionLeft];
@@ -344,7 +348,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGFloat x = 0;
 	CGFloat y = yOffSet;
 	
-	NSInteger xi = weekday - 1;
+	NSInteger xi = weekday - preferredWeekStartIndex;
 	NSInteger yi = 0;
 	
 	for (NSInteger i = 1; i <= lastDayOfMonth; ++i) {
@@ -611,15 +615,20 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGFloat y = [self getEffectiveWeekDaysYOffset];
 	const CGFloat w = self.dayCellWidth;
 	const CGFloat h = self.dayCellHeight;
-	for (int i = 1; i < kCalendarViewDaysInWeek; ++i) {
-		x = (i - 1) * (self.dayCellWidth + kCalendarViewDayCellOffset);
+	for (int i = preferredWeekStartIndex; i < kCalendarViewDaysInWeek; ++i) {
+        int adjustedIndex = i - preferredWeekStartIndex;
+		x = adjustedIndex * (self.dayCellWidth + kCalendarViewDayCellOffset);
 		NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
 		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
-	
-	NSString *strSunday = [NSString stringWithFormat:@"%@",weekdayNames[0]];
-	x = (kCalendarViewDaysInWeek - 1) * (self.dayCellWidth + kCalendarViewDayCellOffset);
-	[strSunday drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+    
+    for (int i = 0; i < preferredWeekStartIndex; ++i) {
+        int adjustedIndex = kCalendarViewDaysInWeek - (preferredWeekStartIndex - i);
+        x = adjustedIndex * (self.dayCellWidth + kCalendarViewDayCellOffset);
+        NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
+        [str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+    }
+
 }
 
 #pragma mark - Change date event
@@ -872,6 +881,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 										  }
 										  completion:nil];
 					 }];
+}
+
+- (void)setPreferredWeekStartIndex:(NSInteger)index
+{
+    preferredWeekStartIndex = (int)index;
 }
 
 @end

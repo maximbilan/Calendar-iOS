@@ -61,6 +61,9 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 - (void)refresh;
 - (void)advanceCalendarContents;
 - (void)rewindCalendarContents;
+// Weekday indices start with Sunday = 0
+// to match the indices provided by the NSDateFormatter method shortWeekdaySymbols
+- (void)setPreferredWeekStartIndex:(NSInteger)index;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 @property (nonatomic, strong) NSDate *currentDate;
@@ -85,7 +88,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property (nonatomic) CGFloat dayFontSize;
 @property (nonatomic) CGFloat headerFontSize;
 
-// Selection Display Options
+// Display Options
 @property (nonatomic, assign) BOOL shouldMarkSelectedDate;
 @property (nonatomic, assign) BOOL shouldMarkToday;
 @property (nonatomic, assign) BOOL shouldShowHeaders;
