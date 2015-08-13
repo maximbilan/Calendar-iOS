@@ -46,6 +46,25 @@ typedef NS_ENUM(NSInteger, CalendarMode)
 <i>Default</i> - there're days, months and years, the user can change monthes with help swipe gesture or pinch gesture for transitions in the calendar <br>
 <i>MonthsAndYears</i> - available months and years <br>
 <i>Years</i> - only years <br>
+<br>
+There are external methods to mimic the swiping behavior in case a different UI is desired. However, these events will be logged with a different event type than swiping. <br>
+<br>
+There are also some options for display: <br>
+<pre>
+// Whether the currently selected date should be marked
+@property (nonatomic, assign) BOOL shouldMarkSelectedDate;
+// Whether today's date should be marked
+@property (nonatomic, assign) BOOL shouldMarkToday;
+// Whether the month and year headers should be shown
+@property (nonatomic, assign) BOOL shouldShowHeaders;
+// Preferred weekday start
+- (void)setPreferredWeekStartIndex:(NSInteger)index;
+</pre>
+<i>Date Markers</i> - Default behavior is to mark the currently selected date and not today, but this can be customized to suit your needs. If both are marked and coincide on the same day, it will show up with the current selection color, not today's color. <br>
+<i>Headers</i> - Default behavior is to show the headers, but they can also be hidden, in which case everything else will get shifted up accordingly (after a set needs display call). <br>
+<i>Preferred Week Start</i> - Default behavior behavior is Monday. Determines what day of the week is in the leftmost column. <br>
+<br>
+
 ## How to handle changing date event:
 For this you should use <i>CalendarViewDelegate</i> protocol:
 <pre>
@@ -83,6 +102,8 @@ For customization of colors you can use the following properties:
 @property (nonatomic, strong) UIColor *fontSelectedColor;
 // Color of selection
 @property (nonatomic, strong) UIColor *selectionColor;
+// Color of today
+@property (nonatomic, strong) UIColor *todayColor;
 </pre>
 For example:
 <pre>
