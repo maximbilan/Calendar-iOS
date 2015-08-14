@@ -20,6 +20,8 @@ CalendarView.h
 CalendarView.m
 NSDate+CalendarView.h
 NSDate+CalendarView.m
+NSString+CalendarView.h
+NSString+CalendarView.m
 </pre>
 <b>Cocoapods:</b>
 <pre>
