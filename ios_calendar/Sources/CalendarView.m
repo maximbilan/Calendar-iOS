@@ -78,8 +78,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     CGRect yearTitleRect;
     CGRect monthTitleRect;
-    
-    UIColor *bgColor;
 }
 
 - (void)setup;
@@ -188,7 +186,8 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     self.fontSelectedColor = [UIColor whiteColor];
     self.selectionColor = [UIColor redColor];
     self.todayColor = [UIColor redColor];
-    bgColor = [UIColor whiteColor];
+    self.bgColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     
     self.shouldMarkSelectedDate = YES;
     self.shouldMarkToday = NO;
@@ -467,7 +466,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextClearRect(context, rect);
 	
-	CGContextSetFillColorWithColor(context, bgColor.CGColor);
+	CGContextSetFillColorWithColor(context, self.bgColor.CGColor);
 	CGContextFillRect(context, rect);
     
 	NSDictionary *attributesBlack = [self generateAttributes:self.fontName
