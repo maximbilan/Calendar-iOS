@@ -481,12 +481,12 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
     
 	NSDictionary *attributesRedRight = [self generateAttributes:self.fontName
-												   withFontSize:kCalendarViewHeaderFontSize
+												   withFontSize:self.headerFontSize
 													  withColor:self.fontHeaderColor
 												  withAlignment:NSTextAlignmentFromCTTextAlignment(kCTRightTextAlignment)];
 	
 	NSDictionary *attributesRedLeft = [self generateAttributes:self.fontName
-												  withFontSize:kCalendarViewHeaderFontSize
+												  withFontSize:self.headerFontSize
 													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
