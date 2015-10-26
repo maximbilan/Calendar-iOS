@@ -470,27 +470,27 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGContextSetFillColorWithColor(context, bgColor.CGColor);
 	CGContextFillRect(context, rect);
     
-	NSDictionary *attributesBlack = [self generateAttributes:kCalendarViewDefaultFont
+	NSDictionary *attributesBlack = [self generateAttributes:self.fontName
 												withFontSize:kCalendarViewDayFontSize
 												   withColor:self.fontColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
-	NSDictionary *attributesWhite = [self generateAttributes:kCalendarViewDefaultFont
+	NSDictionary *attributesWhite = [self generateAttributes:self.fontName
 												withFontSize:kCalendarViewDayFontSize
 												   withColor:self.fontSelectedColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
     
-	NSDictionary *attributesRedRight = [self generateAttributes:kCalendarViewDefaultFont
+	NSDictionary *attributesRedRight = [self generateAttributes:self.fontName
 												   withFontSize:kCalendarViewHeaderFontSize
 													  withColor:self.fontHeaderColor
 												  withAlignment:NSTextAlignmentFromCTTextAlignment(kCTRightTextAlignment)];
 	
-	NSDictionary *attributesRedLeft = [self generateAttributes:kCalendarViewDefaultFont
+	NSDictionary *attributesRedLeft = [self generateAttributes:self.fontName
 												  withFontSize:kCalendarViewHeaderFontSize
 													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
-	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)kCalendarViewDefaultFont, kCalendarViewDayFontSize, NULL);
+	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)self.fontName, kCalendarViewDayFontSize, NULL);
 	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
 	CFRelease(cellFont);
     
@@ -606,7 +606,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	NSArray *weekdayNames = [dateFormatter shortWeekdaySymbols];
 	
-	NSDictionary *attrs = [self generateAttributes:kCalendarViewDefaultFont
+	NSDictionary *attrs = [self generateAttributes:self.fontName
 									  withFontSize:kCalendarViewDayFontSize
 										 withColor:self.fontColor
 									 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
