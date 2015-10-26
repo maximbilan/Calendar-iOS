@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property (nonatomic, strong) UIColor *fontSelectedColor;
 @property (nonatomic, strong) UIColor *selectionColor;
 @property (nonatomic, strong) UIColor *todayColor;
+@property (nonatomic, strong) UIColor *bgColor;
 
 // Cell Size
 @property (nonatomic) CGFloat dayCellWidth;

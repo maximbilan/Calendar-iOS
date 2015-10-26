@@ -78,8 +78,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     CGRect yearTitleRect;
     CGRect monthTitleRect;
-    
-    UIColor *bgColor;
 }
 
 - (void)setup;
@@ -188,7 +186,8 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     self.fontSelectedColor = [UIColor whiteColor];
     self.selectionColor = [UIColor redColor];
     self.todayColor = [UIColor redColor];
-    bgColor = [UIColor whiteColor];
+    self.bgColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     
     self.shouldMarkSelectedDate = YES;
     self.shouldMarkToday = NO;
@@ -467,30 +466,30 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextClearRect(context, rect);
 	
-	CGContextSetFillColorWithColor(context, bgColor.CGColor);
+	CGContextSetFillColorWithColor(context, self.bgColor.CGColor);
 	CGContextFillRect(context, rect);
     
-	NSDictionary *attributesBlack = [self generateAttributes:kCalendarViewDefaultFont
-												withFontSize:kCalendarViewDayFontSize
+	NSDictionary *attributesBlack = [self generateAttributes:self.fontName
+												withFontSize:self.dayFontSize
 												   withColor:self.fontColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
-	NSDictionary *attributesWhite = [self generateAttributes:kCalendarViewDefaultFont
-												withFontSize:kCalendarViewDayFontSize
+	NSDictionary *attributesWhite = [self generateAttributes:self.fontName
+												withFontSize:self.dayFontSize
 												   withColor:self.fontSelectedColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
     
-	NSDictionary *attributesRedRight = [self generateAttributes:kCalendarViewDefaultFont
-												   withFontSize:kCalendarViewHeaderFontSize
+	NSDictionary *attributesRedRight = [self generateAttributes:self.fontName
+												   withFontSize:self.headerFontSize
 													  withColor:self.fontHeaderColor
 												  withAlignment:NSTextAlignmentFromCTTextAlignment(kCTRightTextAlignment)];
 	
-	NSDictionary *attributesRedLeft = [self generateAttributes:kCalendarViewDefaultFont
-												  withFontSize:kCalendarViewHeaderFontSize
+	NSDictionary *attributesRedLeft = [self generateAttributes:self.fontName
+												  withFontSize:self.headerFontSize
 													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
-	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)kCalendarViewDefaultFont, kCalendarViewDayFontSize, NULL);
+	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)self.fontName, self.dayFontSize, NULL);
 	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
 	CFRelease(cellFont);
     
@@ -606,8 +605,8 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	NSArray *weekdayNames = [dateFormatter shortWeekdaySymbols];
 	
-	NSDictionary *attrs = [self generateAttributes:kCalendarViewDefaultFont
-									  withFontSize:kCalendarViewDayFontSize
+	NSDictionary *attrs = [self generateAttributes:self.fontName
+									  withFontSize:self.dayFontSize
 										 withColor:self.fontColor
 									 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
