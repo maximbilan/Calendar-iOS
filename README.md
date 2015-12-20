@@ -12,7 +12,7 @@ Using popover:
 <br><br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br>
-## Installation:
+## Installation
 <b>Manual:</b><br><br>
 Add to your project the next source files: <br>
 <pre>
@@ -27,7 +27,7 @@ NSString+CalendarView.m
 <pre>
 pod 'Calendar-iOS'
 </pre>
-## How to use:
+## How to use
 You can add view in the Interface builder and set class to <i>CalendarView</i> or create in the code: <br>
 <pre>
 CalendarView *calendarView = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
@@ -65,7 +65,7 @@ There are also some options for display: <br>
 <i>Date Markers</i> - Default behavior is to mark the currently selected date and not today, but this can be customized to suit your needs. If both are marked and coincide on the same day, it will show up with the current selection color, not today's color. <br>
 <i>Headers</i> - Default behavior is to show the headers, but they can also be hidden, in which case everything else will get shifted up accordingly (after a set needs display call). <br>
 <i>Preferred Week Start</i> - Default behavior behavior is Monday. Determines what day of the week is in the leftmost column.
-## How to handle changing date event:
+## How to handle changing date event
 For this you should use <i>CalendarViewDelegate</i> protocol:
 <pre>
 @interface ViewController : UIViewController &#60;CalendarViewDelegate&#62;
@@ -91,7 +91,7 @@ For more details there're optional methods for other things: <br>
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
 </pre>
-## How to customize colors:
+## How to customize colors
 For customization of colors you can use the following properties:
 <pre>
 // Main color of numbers
