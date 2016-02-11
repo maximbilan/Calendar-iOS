@@ -23,7 +23,7 @@ NSDate+CalendarView.m
 NSString+CalendarView.h
 NSString+CalendarView.m
 </pre>
-<b>Cocoapods:</b>
+<b>CocoaPods:</b>
 <pre>
 pod 'Calendar-iOS'
 </pre>
