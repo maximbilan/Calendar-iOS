@@ -12,7 +12,7 @@ Using popover:
 <br><br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img5.png)
 <br>
-## Installation
+## How to install
 <b>Manual:</b><br><br>
 Add to your project the next source files: <br>
 <pre>
