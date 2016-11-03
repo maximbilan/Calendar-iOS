@@ -13,7 +13,7 @@
 - (NSUInteger)getLastDayOfMonth
 {
 	NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-	NSRange daysRange = [currentCalendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:self];
+	NSRange daysRange = [currentCalendar rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:self];
 	return daysRange.length;
 }
 
@@ -21,9 +21,9 @@
 {
 	NSTimeZone *timeZone = [NSTimeZone localTimeZone];
 
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 	[calendar setTimeZone:timeZone];
-	NSDateComponents *components = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit)
+	NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay)
                                                fromDate:self];
 	[components setDay:1];
 	[components setHour:0];
@@ -31,7 +31,7 @@
 	[components setSecond:0];
 	[components setTimeZone:timeZone];
 	
-	NSDateComponents *weekdayComponents = [calendar components:(NSDayCalendarUnit | NSWeekdayCalendarUnit)
+	NSDateComponents *weekdayComponents = [calendar components:(NSCalendarUnitDay | NSCalendarUnitWeekday)
                                                       fromDate:[calendar dateFromComponents:components]];
 	NSInteger weekday = [weekdayComponents weekday];
 	
