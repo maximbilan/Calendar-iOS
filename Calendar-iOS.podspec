@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Calendar-iOS"
-  s.version      = "0.9"
+  s.version      = "0.10"
   s.summary      = "iOS calendar component"
   s.description  = "iOS calendar component. It's lightweight and simple control."
   s.homepage     = "https://github.com/maximbilan/ios_calendar"
