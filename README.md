@@ -2,9 +2,10 @@ iOS Calendar
 ============
 
 [![Version](https://img.shields.io/cocoapods/v/Calendar-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Calendar-iOS)
+[![License](https://img.shields.io/cocoapods/l/Calendar-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Calendar-iOS)
 [![Platform](https://img.shields.io/cocoapods/p/Calendar-iOS.svg?style=flat)](http://cocoadocs.org/docsets/Calendar-iOS)
-[![CocoaPods](https://img.shields.io/cocoapods/dt/QuickBlox.svg)](https://cocoapods.org/pods/Calendar-iOS)
-[![CocoaPods](https://img.shields.io/cocoapods/dm/QuickBlox.svg)](https://cocoapods.org/pods/Calendar-iOS)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
 
 It's lightweight and simple control. There're samples for iPhone and iPad, and also with using popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
