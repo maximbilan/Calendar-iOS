@@ -7,7 +7,7 @@ iOS Calendar
 [![CocoaPods](https://img.shields.io/cocoapods/dt/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
 [![CocoaPods](https://img.shields.io/cocoapods/dm/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
 
-It's lightweight and simple control. There're samples for iPhone and iPad, and also with using popover.<br>
+It's lightweight and simple control. There're samples for iPhone and iPad, and also with using a popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
 <br>
 Using popover:
@@ -30,13 +30,13 @@ NSString+CalendarView.m
 pod 'Calendar-iOS'
 </pre>
 ## How to use
-You can add view in the Interface builder and set class to <i>CalendarView</i> or create in the code: <br>
+You can add view in the Interface Builder and set class to <i>CalendarView</i> or create in the code: <br>
 <pre>
 CalendarView *calendarView = [[CalendarView alloc] initWithPosition:10.0 y:10.0];
 [self.view addSubview:calendarView];
 </pre>
 So, it's all, you should see the calendar view. <br>
-This component was created for iPhone/iPod resolution, for iPad it's works, but it looks really small, if it's necessary, you can playing with static constants in the <i>CalendarView.m</i>, and maybe in future, will be done the scaling.
+This component was created for iPhone/iPod resolution, for iPad its works, but it looks really small, if it's necessary, you can play with static constants in the <i>CalendarView.m</i>, and maybe in future, will be done the scaling.
 <br>
 This calendar has some modes: <br>
 <pre>
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, CalendarMode)
     CalendarModeYears
 };
 </pre>
-<i>Default</i> - there're days, months and years, the user can change monthes with help swipe gesture or pinch gesture for transitions in the calendar <br>
+<i>Default</i> - there're days, months and years, the user can change months with help swipe gesture or pinch gesture for transitions in the calendar <br>
 <i>MonthsAndYears</i> - available months and years <br>
 <i>Years</i> - only years <br>
 <br>
@@ -64,7 +64,7 @@ There are also some options for display: <br>
 // Preferred weekday start
 - (void)setPreferredWeekStartIndex:(NSInteger)index;
 </pre>
-<i>Date Markers</i> - Default behavior is to mark the currently selected date and not today, but this can be customized to suit your needs. If both are marked and coincide on the same day, it will show up with the current selection color, not today's color. <br>
+<i>Date Markers</i> - Default behavior is to mark the currently selected date and not today, but this can be customized to suit your needs. If both are marked and coincide on the same day, it will show up with the current selection color, not today's color.<br>
 <i>Headers</i> - Default behavior is to show the headers, but they can also be hidden, in which case everything else will get shifted up accordingly (after a set needs display call). <br>
 <i>Preferred Week Start</i> - Default behavior behavior is Monday. Determines what day of the week is in the leftmost column.
 ## How to handle changing date event
