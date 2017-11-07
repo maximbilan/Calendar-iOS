@@ -335,14 +335,15 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	[components setDay:1];  // set first day of month
 	
     NSDate *currentDate = [calendar dateFromComponents:components];
-	NSUInteger lastDayOfMonth = [currentDate getLastDayOfMonth];
+	NSUInteger lastDayOfMonth = [currentDate getLastDayOfMonthForCalendar:calendar];
+    
     if (currentDay > lastDayOfMonth) {
         currentDay = lastDayOfMonth;
     }
     
     [components setDay:currentDay];
     currentDate = [calendar dateFromComponents:components];
-    NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonth];
+    NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
 	
 	const CGFloat yOffSet = [self getEffectiveDaysYOffset];
 	const CGFloat w = self.dayCellWidth;
