@@ -743,7 +743,10 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.locale = self.locale;
 	NSArray *weekdayNames = [dateFormatter shortWeekdaySymbols];
-	
+    if (_useVeryShortWeekdaySymbols) {
+        weekdayNames = [dateFormatter veryShortWeekdaySymbols];
+    }
+    
     if (self.calendarIdentifier == NSCalendarIdentifierPersian){
         NSMutableArray *arrayWeeks = [weekdayNames mutableCopy];
         [arrayWeeks insertObject:arrayWeeks.lastObject atIndex:0];

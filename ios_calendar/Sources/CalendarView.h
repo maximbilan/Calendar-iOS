@@ -98,4 +98,5 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 // Weekday indices start with Sunday = 0
 // to match the indices provided by the NSDateFormatter method shortWeekdaySymbols
 @property (nonatomic) NSInteger preferredWeekStartIndex;
+@property (nonatomic) BOOL useVeryShortWeekdaySymbols;
 @end
