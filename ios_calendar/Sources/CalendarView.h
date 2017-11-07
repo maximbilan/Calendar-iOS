@@ -94,4 +94,6 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property (nonatomic, assign) BOOL shouldMarkToday;
 @property (nonatomic, assign) BOOL shouldShowHeaders;
 
+@property (nonatomic, strong) NSCalendarIdentifier calendarIdentifier;
+@property (nonatomic, strong) NSLocale *locale;
 @end
