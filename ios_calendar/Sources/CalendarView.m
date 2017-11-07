@@ -32,7 +32,7 @@ static const NSInteger kCalendarViewYearsInLine      = 5;
 static const CGFloat kCalendarViewMonthLabelWidth    = 100;
 static const CGFloat kCalendarViewMonthLabelHeight   = 20;
 
-static const CGFloat kCalendarViewYearLabelWidth     = 40;
+static const CGFloat kCalendarViewYearLabelWidth     = 60;
 static const CGFloat kCalendarViewYearLabelHeight    = 20;
 
 static const CGFloat kCalendarViewWeekDaysYOffset    = 30;
@@ -271,7 +271,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (void)refresh
 {
-    [self generateDayRects];
+    if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
+        [self generatePersianDayRects];
+    } else {
+        [self generateDayRects];
+    }
     [self generateMonthRects];
     [self generateYearRects];
 }
@@ -289,7 +293,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
         
         switch (type) {
             case CalendarViewTypeDay:
-                [self generateDayRects];
+                if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
+                    [self generatePersianDayRects];
+                } else {
+                    [self generateDayRects];
+                }
                 break;
             case CalendarViewTypeYear:
                 [self generateYearRects];
@@ -698,6 +706,13 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     dateFormatter.locale = self.locale;
 	NSArray *weekdayNames = [dateFormatter shortWeekdaySymbols];
 	
+    if (self.calendarIdentifier == NSCalendarIdentifierPersian){
+        NSMutableArray *arrayWeeks = [weekdayNames mutableCopy];
+        [arrayWeeks insertObject:arrayWeeks.lastObject atIndex:0];
+        [arrayWeeks removeObjectAtIndex:arrayWeeks.count-1];
+        weekdayNames = [[arrayWeeks reverseObjectEnumerator] allObjects];
+    }
+    
 	NSDictionary *attrs = [self generateAttributes:self.fontName
 									  withFontSize:self.dayFontSize
 										 withColor:self.fontColor
@@ -764,7 +779,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
                 ++currentMonth;
             }
             
-            [self generateDayRects];
+            if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
+                [self generatePersianDayRects];
+            } else {
+                [self generateDayRects];
+            }
         }
             break;
         case CalendarViewTypeMonth:
@@ -802,7 +821,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
                 --currentMonth;
             }
             
-            [self generateDayRects];
+            if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
+                [self generatePersianDayRects];
+            } else {
+                [self generateDayRects];
+            }
         }
             break;
         case CalendarViewTypeMonth:
@@ -919,7 +942,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
     
     if (type == CalendarViewTypeDay) {
-        [self generateDayRects];
+        if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
+            [self generatePersianDayRects];
+        } else {
+            [self generateDayRects];
+        }
     }
     
     NSDate *currentDate = [self currentDate];
@@ -946,9 +973,15 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[paragraphStyle setAlignment:textAlignment];
 	[paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
-	
+    
+    UIFont *font = nil;
+    if ([self.fontName isEqualToString:@"TrebuchetMS"] && self.calendarIdentifier == NSCalendarIdentifierPersian) {
+        font = [UIFont systemFontOfSize:fontSize];
+    } else {
+        font = [UIFont fontWithName:self.fontName size:fontSize];
+    }
 	NSDictionary * attrs = @{
-							 NSFontAttributeName : [UIFont fontWithName:fontName size:fontSize],
+							 NSFontAttributeName : font,
 							 NSForegroundColorAttributeName : color,
 							 NSParagraphStyleAttributeName : paragraphStyle
 							 };
