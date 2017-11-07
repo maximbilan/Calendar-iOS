@@ -61,9 +61,6 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 - (void)refresh;
 - (void)advanceCalendarContents;
 - (void)rewindCalendarContents;
-// Weekday indices start with Sunday = 0
-// to match the indices provided by the NSDateFormatter method shortWeekdaySymbols
-- (void)setPreferredWeekStartIndex:(NSInteger)index;
 
 @property (nonatomic, weak) id<CalendarViewDelegate> calendarDelegate;
 @property (nonatomic, strong) NSDate *currentDate;
@@ -96,4 +93,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 
 @property (nonatomic, strong) NSCalendarIdentifier calendarIdentifier;
 @property (nonatomic, strong) NSLocale *locale;
+// Weekday indices start with Sunday = 0
+// to match the indices provided by the NSDateFormatter method shortWeekdaySymbols
+@property (nonatomic) NSInteger preferredWeekStartIndex;
 @end

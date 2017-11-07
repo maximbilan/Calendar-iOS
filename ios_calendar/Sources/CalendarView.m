@@ -65,9 +65,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger currentDay;
     NSInteger currentMonth;
     NSInteger currentYear;
-    
-    int preferredWeekStartIndex;
-    
+        
     NSInteger todayDay;
     NSInteger todayMonth;
     NSInteger todayYear;
@@ -353,7 +351,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGFloat x = 0;
 	CGFloat y = yOffSet;
 	
-	NSInteger xi = weekday - preferredWeekStartIndex;
+	NSInteger xi = weekday - self.preferredWeekStartIndex;
 	NSInteger yi = 0;
 	
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -631,15 +629,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	CGFloat y = [self getEffectiveWeekDaysYOffset];
 	const CGFloat w = self.dayCellWidth;
 	const CGFloat h = self.dayCellHeight;
-	for (int i = preferredWeekStartIndex; i < kCalendarViewDaysInWeek; ++i) {
-        int adjustedIndex = i - preferredWeekStartIndex;
+    
+	for (NSInteger i = self.preferredWeekStartIndex; i < kCalendarViewDaysInWeek; ++i) {
+        NSInteger adjustedIndex = i - self.preferredWeekStartIndex;
 		x = adjustedIndex * (self.dayCellWidth + kCalendarViewDayCellOffset);
 		NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
 		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
 	}
     
-    for (int i = 0; i < preferredWeekStartIndex; ++i) {
-        int adjustedIndex = kCalendarViewDaysInWeek - (preferredWeekStartIndex - i);
+    for (NSInteger i = 0; i < self.preferredWeekStartIndex; ++i) {
+        NSInteger adjustedIndex = kCalendarViewDaysInWeek - (self.preferredWeekStartIndex - i);
         x = adjustedIndex * (self.dayCellWidth + kCalendarViewDayCellOffset);
         NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
         [str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
@@ -897,11 +896,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 										  }
 										  completion:nil];
 					 }];
-}
-
-- (void)setPreferredWeekStartIndex:(NSInteger)index
-{
-    preferredWeekStartIndex = (int)index;
 }
 
 @end
