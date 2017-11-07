@@ -69,7 +69,7 @@ There are also some options for display: <br>
 <i>Headers</i> - Default behavior is to show the headers, but they can also be hidden, in which case everything else will get shifted up accordingly (after a set needs display call). <br>
 <i>Preferred Week Start</i> - Default behavior behavior is Monday. Determines what day of the week is in the leftmost column.
 ## How to use Locale and CalendarIdentifier
-It's very simple and useful to create calendar base on your locale and of curse your country. 
+It's very simple and useful to create calendar base on your locale and of course your country. 
 <pre>
 NSLocale *persianLocale = [NSLocale alloc]initWithLocaleIdentifier:@"fa-IR"];
 [self.calendarView setLocale:persianLocale];
