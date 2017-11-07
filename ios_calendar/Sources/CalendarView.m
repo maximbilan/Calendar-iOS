@@ -376,6 +376,83 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	}
 }
 
+- (void) generatePersianDayRects{
+    [dayRects removeAllObjects];
+    
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
+    [components setYear:currentYear];
+    [components setMonth:currentMonth];
+    [components setDay:1];  // set first day of month
+    
+    NSDate *currentDate = [calendar dateFromComponents:components];
+    NSUInteger lastDayOfMonth = [currentDate getLastDayOfMonthForCalendar:calendar];
+
+    NSInteger startDayOfMonth = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
+    NSInteger plusRow = startDayOfMonth == 7?2:1;
+    NSInteger weeks = (lastDayOfMonth / 7)+plusRow;
+    NSInteger minimumDayOfWeek = 1;
+    startDayOfMonth = kCalendarViewDaysInWeek - (startDayOfMonth-1);
+    
+    NSMutableArray *daysOfMonth = [[NSMutableArray alloc] init];
+    for (int i = 1; i <= weeks; i++) {
+        NSMutableArray *arrayOfEachWeek = [[NSMutableArray alloc] init];
+        for (NSInteger j = startDayOfMonth; j >= minimumDayOfWeek ; j--) {
+            if (j > lastDayOfMonth) {
+                break;
+            }
+            [arrayOfEachWeek addObject:@(j)];
+        }
+        [daysOfMonth addObject:arrayOfEachWeek];
+        startDayOfMonth = (startDayOfMonth + kCalendarViewDaysInWeek);
+        minimumDayOfWeek = (startDayOfMonth - kCalendarViewDaysInWeek)+1;
+        if (startDayOfMonth > lastDayOfMonth) {
+            startDayOfMonth = startDayOfMonth - (startDayOfMonth - lastDayOfMonth);
+        }
+    }
+    
+    [components setDay:currentDay];
+    currentDate = [calendar dateFromComponents:components];
+    NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
+    
+    const CGFloat yOffSet = [self getEffectiveDaysYOffset];
+    const CGFloat w = self.dayCellWidth;
+    const CGFloat h = self.dayCellHeight;
+    
+    CGFloat x = 0;
+    CGFloat y = yOffSet;
+    
+    NSInteger xi = kCalendarViewDaysInWeek - weekday;
+    NSInteger yi = 0;
+    
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.locale = self.locale;
+    NSInteger day = 1;
+    for (int i = 0; i < daysOfMonth.count; i++) {
+        NSArray *week = (NSArray *)daysOfMonth[i];
+        for (int j = 0; j < week.count; j++) {
+            x = xi * (self.dayCellWidth + kCalendarViewDayCellOffset);
+            --xi;
+            
+            CalendarViewRect *dayRect = [[CalendarViewRect alloc] init];
+            dayRect.value = day;
+            dayRect.str = [formatter stringForObjectValue:@(day)];
+            dayRect.frame = CGRectMake(x, y, w, h);
+            if (j == kCalendarViewDaysInWeek -1 ||
+                (i < daysOfMonth.count -1 && j == week.count -1)) {
+                dayRect.isVecation = YES;
+            }
+            [dayRects addObject:dayRect];
+            
+            day ++;
+        }
+        xi = kCalendarViewDaysInWeek-1;
+        ++yi;
+        y = yOffSet + yi * (self.dayCellHeight + kCalendarViewDayCellOffset);
+    }
+}
+
 - (void)generateMonthRects
 {
     [monthRects removeAllObjects];
