@@ -267,6 +267,33 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
+#pragma mark - calendarIdentifier getter/setter methods
+- (void) setCalendarIdentifier:(NSCalendarIdentifier)calendarIdentifier{
+    _calendarId = calendarIdentifier;
+    if (calendarIdentifier == NSCalendarIdentifierPersian) {
+        self.preferredWeekStartIndex = 0;
+    }
+}
+- (NSCalendarIdentifier) calendarIdentifier{
+    if (_calendarId) {
+        return _calendarId;
+    }
+    return NSCalendarIdentifierGregorian;
+}
+
+#pragma mark - locale getter/setter methods
+- (void) setLocale:(NSLocale *)locale{
+    _calenderLocale = locale;
+}
+- (NSLocale *) locale{
+    if (_calenderLocale) {
+        return _calenderLocale;
+    }
+    return [[NSLocale alloc] initWithLocaleIdentifier:@"en-US"];
+}
+
+#pragma mark - reload
+}
 #pragma mark - Refresh
 
 - (void)refresh
@@ -570,6 +597,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 												withFontSize:self.dayFontSize
 												   withColor:self.fontColor
 											   withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
+    
+    NSDictionary *attributesRed = [self generateAttributes:self.fontName
+                                                withFontSize:self.dayFontSize
+                                                   withColor:[UIColor redColor]
+                                               withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
 	NSDictionary *attributesWhite = [self generateAttributes:self.fontName
 												withFontSize:self.dayFontSize
@@ -671,6 +703,9 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
                 attrs = attributesBlack;
             }
             
+            if (rect.isVecation && attrs != attributesWhite) {
+                attrs = attributesRed;
+            }
             [rect.str drawUsingRect:rectText withAttributes:attrs];
         }
     }
@@ -717,6 +752,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 									  withFontSize:self.dayFontSize
 										 withColor:self.fontColor
 									 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
+    
+    NSDictionary *attrsForVecation = [self generateAttributes:self.fontName
+                                      withFontSize:self.dayFontSize
+                                         withColor:[UIColor redColor]
+                                     withAlignment:NSTextAlignmentFromCTTextAlignment(kCTCenterTextAlignment)];
 	
 	CGFloat x = 0;
 	CGFloat y = [self getEffectiveWeekDaysYOffset];
@@ -727,7 +767,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
         NSInteger adjustedIndex = i - self.preferredWeekStartIndex;
 		x = adjustedIndex * (self.dayCellWidth + kCalendarViewDayCellOffset);
 		NSString *str = [NSString stringWithFormat:@"%@", weekdayNames[i]];
-		[str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+        if (self.calendarIdentifier == NSCalendarIdentifierPersian && i == 0) {
+            [str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrsForVecation];
+        } else {
+            [str drawUsingRect:CGRectMake(x, y, w, h) withAttributes:attrs];
+        }
 	}
     
     for (NSInteger i = 0; i < self.preferredWeekStartIndex; ++i) {

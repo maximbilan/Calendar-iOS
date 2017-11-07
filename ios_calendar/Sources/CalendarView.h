@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @property NSInteger value;
 @property NSString  *str;
 @property CGRect    frame;
+@property BOOL isVecation;
 
 @end
 
