@@ -13,4 +13,10 @@
 @property (NS_NONATOMIC_IOSONLY, getter=getLastDayOfMonth, readonly) NSUInteger lastDayOfMonth;
 @property (NS_NONATOMIC_IOSONLY, getter=getWeekdayOfFirstDayOfMonth, readonly) NSInteger weekdayOfFirstDayOfMonth;
 
+- (NSUInteger)getLastDayOfMonthForCalendarIdentifier:(NSCalendarIdentifier)
+calendarIdentifier;
+- (NSUInteger)getLastDayOfMonthForCalendar:(NSCalendar *) calendar;
+- (NSInteger)getWeekdayOfFirstDayOfMonthForCalendarIdentifier:(NSCalendarIdentifier) calendarIdentifier;
+- (NSInteger)getWeekdayOfFirstDayOfMonthForCalendar:(NSCalendar *) calendar;
+
 @end
