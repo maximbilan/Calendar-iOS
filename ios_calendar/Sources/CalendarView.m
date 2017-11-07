@@ -293,6 +293,9 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 }
 
 #pragma mark - reload
+
+- (void) reload{
+    [self setup];
 }
 #pragma mark - Refresh
 
