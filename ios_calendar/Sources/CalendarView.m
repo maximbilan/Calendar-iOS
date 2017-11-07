@@ -141,6 +141,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 {
     self = [super initWithFrame:frame];
     if (self) {
+        [self initProperties];
 		[self setup];
     }
     return self;
@@ -149,7 +150,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
+    [self initProperties];
     [self setup];
 }
 
@@ -165,8 +166,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 #pragma mark - Setup
 
-- (void)setup
-{
+- (void) initProperties{
     self.dayCellWidth = kCalendarViewDayCellWidth;
     self.dayCellHeight = kCalendarViewDayCellHeight;
     self.monthCellWidth = kCalendarViewMonthCellWidth;
@@ -174,17 +174,18 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     self.yearCellWidth = kCalendarViewYearCellWidth;
     self.yearCellHeight = kCalendarViewYearCellHeight;
     
-    self.fontName = kCalendarViewDefaultFont;
-    self.dayFontSize = kCalendarViewDayFontSize;
-    self.headerFontSize = kCalendarViewHeaderFontSize;
+    self.preferredWeekStartIndex = 1; // This is Monday, from [dateFormatter shortWeekdaySymbols]
+    if (!_fontName) {
+        self.fontName = kCalendarViewDefaultFont;
+    }
+    if (!_dayFontSize) {
+        self.dayFontSize = kCalendarViewDayFontSize;
+    }
+    if (!_headerFontSize) {
+        self.headerFontSize = kCalendarViewHeaderFontSize;
+    }
     
-    dayRects = [[NSMutableArray alloc] init];
-    monthRects = [[NSMutableArray alloc] init];
-    yearRects = [[NSMutableArray alloc] init];
-    
-    yearTitleRect = CGRectMake(0, 0, 0, 0);
-    monthTitleRect = CGRectMake(0, 0, 0, 0);
-    
+    [self setMode:CalendarModeDefault];
     self.fontColor = [UIColor blackColor];
     self.fontHeaderColor = [UIColor redColor];
     self.fontSelectedColor = [UIColor whiteColor];
@@ -196,24 +197,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     self.shouldMarkSelectedDate = YES;
     self.shouldMarkToday = NO;
     self.shouldShowHeaders = NO;
-    
-    event = CalendarEventNone;
-    
-    [self setMode:CalendarModeDefault];
-    
-    NSDate *now = [NSDate date];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
-    
-    currentDay = [components day];
-    currentMonth = [components month];
-    currentYear = [components year];
-    
-    todayDay = [components day];
-    todayMonth = [components month];
-    todayYear = [components year];
-    
-    preferredWeekStartIndex = 1; // This is Monday, from [dateFormatter shortWeekdaySymbols]
     
     UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipe:)];
     [left setDirection:UISwipeGestureRecognizerDirectionLeft];
@@ -233,10 +216,32 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTap];
+}
+
+- (void)setup
+{
+    dayRects = [[NSMutableArray alloc] init];
+    monthRects = [[NSMutableArray alloc] init];
+    yearRects = [[NSMutableArray alloc] init];
     
-    [self generateDayRects];
-    [self generateMonthRects];
-    [self generateYearRects];
+    yearTitleRect = CGRectMake(0, 0, 0, 0);
+    monthTitleRect = CGRectMake(0, 0, 0, 0);
+    
+    event = CalendarEventNone;
+    
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
+    
+    currentDay = [components day];
+    currentMonth = [components month];
+    currentYear = [components year];
+    
+    todayDay = [components day];
+    todayMonth = [components month];
+    todayYear = [components year];
+    
+    [self refresh];
 }
 
 - (void)setMode:(NSInteger)m
