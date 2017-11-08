@@ -7,8 +7,9 @@ iOS Calendar
 [![CocoaPods](https://img.shields.io/cocoapods/dt/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
 [![CocoaPods](https://img.shields.io/cocoapods/dm/Calendar-iOS.svg)](https://cocoapods.org/pods/Calendar-iOS)
 
-It's lightweight and simple control. There're samples for iPhone and iPad, and also with using a popover.<br>
+It's lightweight and simple control with supporting <i>Locale</i> and <i>CalendarIdentifier</i>. There're samples for iPhone and iPad, and also with using a popover.<br>
 ![alt tag](https://raw.github.com/maximbilan/ios_calendar/master/img/img4.png)
+![alt tag](http://uupload.ir/files/71zl_img10.png)
 <br>
 Using popover:
 <br><br>
@@ -67,6 +68,21 @@ There are also some options for display: <br>
 <i>Date Markers</i> - Default behavior is to mark the currently selected date and not today, but this can be customized to suit your needs. If both are marked and coincide on the same day, it will show up with the current selection color, not today's color.<br>
 <i>Headers</i> - Default behavior is to show the headers, but they can also be hidden, in which case everything else will get shifted up accordingly (after a set needs display call). <br>
 <i>Preferred Week Start</i> - Default behavior behavior is Monday. Determines what day of the week is in the leftmost column.
+## How to use Locale and CalendarIdentifier
+It's very simple and useful to create calendar base on your locale and of course your country. 
+<pre>
+NSLocale *persianLocale = [NSLocale alloc]initWithLocaleIdentifier:@"fa-IR"];
+[self.calendarView setLocale:persianLocale];
+</pre>
+And for using <i>CalendarIdentifier</i> use this property :
+<pre>
+[self.calendarView setCalendarIdentifier:NSCalendarIdentifierPersian];
+</pre>
+if you set <i>useVeryShortWeekdaySymbols property</i> to `YES`, use days of week name very short
+
+<pre>
+self.calendarView.useVeryShortWeekdaySymbols = YES;
+</pre>
 ## How to handle changing date event
 For this you should use <i>CalendarViewDelegate</i> protocol:
 <pre>
