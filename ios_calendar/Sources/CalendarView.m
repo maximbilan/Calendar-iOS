@@ -436,8 +436,11 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSInteger plusRow = startDayOfMonth == 7?2:1;
     NSInteger weeks = (lastDayOfMonth / 7)+plusRow;
     NSInteger minimumDayOfWeek = 1;
-    startDayOfMonth = kCalendarViewDaysInWeek - (startDayOfMonth-1);
-    
+    if (startDayOfMonth > 0) {
+        startDayOfMonth = kCalendarViewDaysInWeek - (startDayOfMonth-1);
+    } else {
+        startDayOfMonth = kCalendarViewDaysInWeek;
+    }
     NSMutableArray *daysOfMonth = [[NSMutableArray alloc] init];
     for (int i = 1; i <= weeks; i++) {
         NSMutableArray *arrayOfEachWeek = [[NSMutableArray alloc] init];
@@ -458,7 +461,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     [components setDay:currentDay];
     currentDate = [calendar dateFromComponents:components];
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
-    
+    weekday = weekday == 0 ? 1:weekday;
     const CGFloat yOffSet = [self getEffectiveDaysYOffset];
     const CGFloat w = self.dayCellWidth;
     const CGFloat h = self.dayCellHeight;
