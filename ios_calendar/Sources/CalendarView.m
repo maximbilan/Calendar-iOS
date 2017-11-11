@@ -233,10 +233,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
     NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
     
-    currentDay = [components day];
-    currentMonth = [components month];
-    currentYear = [components year];
-    
     todayDay = [components day];
     todayMonth = [components month];
     todayYear = [components year];
@@ -299,13 +295,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 #pragma mark - reload
 
-- (void) reload{
+- (void) goToToday{
     [self setup];
 }
 #pragma mark - Refresh
 
 - (void)refresh
 {
+    NSDate *now = [NSDate date];
+    [self setCurrentDate:now];
+    
     if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
         [self generatePersianDayRects];
     } else {
