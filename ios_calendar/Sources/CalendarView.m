@@ -433,6 +433,9 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
     NSInteger startDayOfMonth = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
     NSInteger plusRow = startDayOfMonth == 7?2:1;
+    if (startDayOfMonth >= 6 && lastDayOfMonth == 31) {
+        plusRow = 2;
+    }
     NSInteger weeks = (lastDayOfMonth / 7)+plusRow;
     NSInteger minimumDayOfWeek = 1;
     if (startDayOfMonth > 0) {
