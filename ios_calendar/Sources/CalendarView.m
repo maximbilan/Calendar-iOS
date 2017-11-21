@@ -403,6 +403,14 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     return [components.calendar dateFromComponents:components];
 }
+
+-(NSInteger) getLastDayOfMonth:(NSInteger) month year:(NSInteger) year{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    
+    NSDate *currentDate = [self generateDateWithDay:1 month:month year:year];
+    return [currentDate getLastDayOfMonthForCalendar:calendar];
+}
+
 #pragma mark - Generating of rects
 
 - (void)generateDayRects
