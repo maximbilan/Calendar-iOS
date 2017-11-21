@@ -368,19 +368,27 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (NSDate *)currentDate
 {
+	return [self generateDateWithDay:currentDay month:currentMonth year:currentYear];
+}
+
+/*
+    generateDateComponents
+ Discussion :
+    generate date component for current date and UTC time zone
+ 
+ */
+- (NSDateComponents *) generateDateComponents{
+    NSDate *now = [NSDate date];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
-	[calendar setTimeZone:timeZone];
-	NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:[NSDate date]];
-	[components setYear:currentYear];
-	[components setMonth:currentMonth];
-	[components setDay:currentDay];
-	[components setHour:0];
-	[components setMinute:0];
-	[components setSecond:0];
-	[components setTimeZone:timeZone];
-	
-	return [calendar dateFromComponents:components];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    [calendar setTimeZone:timeZone];
+    
+    NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
+    
+    [components setCalendar:calendar];
+    [components setTimeZone:timeZone];
+    
+    return components;
 }
 
 #pragma mark - Generating of rects
