@@ -76,6 +76,19 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     CGRect yearTitleRect;
     CGRect monthTitleRect;
+    
+    // Range selection properties
+    NSInteger startRangeDay;
+    NSInteger startRangeMonth;
+    NSInteger startRangeYear;
+    CalendarViewRect *startRangeDayRect;
+    NSDate *startDate;
+    
+    NSInteger endRangeDay;
+    NSInteger endRangeMonth;
+    NSInteger endRangeYear;
+    CalendarViewRect *endRangeDayRect;
+    NSDate *endDate;
 }
 
 @property (nonatomic, strong) NSCalendarIdentifier calendarId;
@@ -216,6 +229,13 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTap];
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                            action:@selector(longPress:)];
+//    longPress.numberOfTapsRequired = 1;
+    longPress.numberOfTouchesRequired = 1;
+    longPress.minimumPressDuration = 0.2f;
+    [self addGestureRecognizer:longPress];
 }
 
 - (void)setup
@@ -232,10 +252,6 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     NSDate *now = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
     NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
-    
-    currentDay = [components day];
-    currentMonth = [components month];
-    currentYear = [components year];
     
     todayDay = [components day];
     todayMonth = [components month];
@@ -299,13 +315,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 #pragma mark - reload
 
-- (void) reload{
+- (void) goToToday{
     [self setup];
 }
 #pragma mark - Refresh
 
 - (void)refresh
 {
+    NSDate *now = [NSDate date];
+    [self setCurrentDate:now];
+    
     if (self.calendarIdentifier == NSCalendarIdentifierPersian) {
         [self generatePersianDayRects];
     } else {
@@ -349,19 +368,47 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 - (NSDate *)currentDate
 {
+	return [self generateDateWithDay:currentDay month:currentMonth year:currentYear];
+}
+
+/*
+    generateDateComponents
+ Discussion :
+    generate date component for current date and UTC time zone
+ 
+ */
+- (NSDateComponents *) generateDateComponents{
+    NSDate *now = [NSDate date];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
-	[calendar setTimeZone:timeZone];
-	NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:[NSDate date]];
-	[components setYear:currentYear];
-	[components setMonth:currentMonth];
-	[components setDay:currentDay];
-	[components setHour:0];
-	[components setMinute:0];
-	[components setSecond:0];
-	[components setTimeZone:timeZone];
-	
-	return [calendar dateFromComponents:components];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    [calendar setTimeZone:timeZone];
+    
+    NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
+    
+    [components setCalendar:calendar];
+    [components setTimeZone:timeZone];
+    
+    return components;
+}
+
+- (NSDate *) generateDateWithDay:(NSInteger) day month:(NSInteger) month year:(NSInteger) year{
+    NSDateComponents *components = [self generateDateComponents];
+    
+    [components setYear:year];
+    [components setMonth:month];
+    [components setDay:day];
+    [components setHour:0];
+    [components setMinute:0];
+    [components setSecond:0];
+    
+    return [components.calendar dateFromComponents:components];
+}
+
+-(NSInteger) getLastDayOfMonth:(NSInteger) month year:(NSInteger) year{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+    
+    NSDate *currentDate = [self generateDateWithDay:1 month:month year:year];
+    return [currentDate getLastDayOfMonthForCalendar:calendar];
 }
 
 #pragma mark - Generating of rects
@@ -369,23 +416,15 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)generateDayRects
 {
 	[dayRects removeAllObjects];
-	
-	NSDate *now = [NSDate date];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
-	NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
-	[components setYear:currentYear];
-	[components setMonth:currentMonth];
-	[components setDay:1];  // set first day of month
-	
-    NSDate *currentDate = [calendar dateFromComponents:components];
-	NSUInteger lastDayOfMonth = [currentDate getLastDayOfMonthForCalendar:calendar];
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+	NSUInteger lastDayOfMonth = [self getLastDayOfMonth:currentMonth year:currentYear];
     
     if (currentDay > lastDayOfMonth) {
         currentDay = lastDayOfMonth;
     }
     
-    [components setDay:currentDay];
-    currentDate = [calendar dateFromComponents:components];
+    NSDate *currentDate = [self generateDateWithDay:currentDay month:currentMonth year:currentYear];
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
 	
 	const CGFloat yOffSet = [self getEffectiveDaysYOffset];
@@ -434,10 +473,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
     NSInteger startDayOfMonth = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
     NSInteger plusRow = startDayOfMonth == 7?2:1;
+    if (startDayOfMonth >= 6 && lastDayOfMonth == 31) {
+        plusRow = 2;
+    }
     NSInteger weeks = (lastDayOfMonth / 7)+plusRow;
     NSInteger minimumDayOfWeek = 1;
-    startDayOfMonth = kCalendarViewDaysInWeek - (startDayOfMonth-1);
-    
+    if (startDayOfMonth > 0) {
+        startDayOfMonth = kCalendarViewDaysInWeek - (startDayOfMonth-1);
+    } else {
+        startDayOfMonth = kCalendarViewDaysInWeek;
+    }
     NSMutableArray *daysOfMonth = [[NSMutableArray alloc] init];
     for (int i = 1; i <= weeks; i++) {
         NSMutableArray *arrayOfEachWeek = [[NSMutableArray alloc] init];
@@ -458,7 +503,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     [components setDay:currentDay];
     currentDate = [calendar dateFromComponents:components];
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
-    
+    weekday = weekday == 0 ? 1:weekday;
     const CGFloat yOffSet = [self getEffectiveDaysYOffset];
     const CGFloat w = self.dayCellWidth;
     const CGFloat h = self.dayCellHeight;
@@ -626,7 +671,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
-	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)self.fontName, self.dayFontSize, NULL);
+	CTFontRef cellFont = CTFontCreateWithName((__bridge CFStringRef)self.fontName, self.dayFontSize, NULL);
 	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
 	CFRelease(cellFont);
     
@@ -686,28 +731,42 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     if (rects) {
         for (CalendarViewRect *rect in rects) {
-            NSDictionary *attrs = nil;
+            NSDictionary *attrs = attributesBlack;
             CGRect rectText = rect.frame;
             rectText.origin.y = rectText.origin.y + ((CGRectGetHeight(rectText) - CGRectGetHeight(cellFontBoundingBox)) * 0.5);
             
-            if (rect.value == currentValue && self.shouldMarkSelectedDate) {
+            if (type == CalendarViewTypeDay && (((rect.value >= startRangeDay && rect.value <= endRangeDay) && currentMonth >= startRangeMonth && currentYear >= startRangeYear) || ((rect.value >= startRangeDay && rect.value <= endRangeDay) && currentMonth <= endRangeMonth && currentYear <= endRangeYear))) {
                 if (type == CalendarViewTypeDay) {
                     [self drawCircle:rect.frame toContext:&context withColor:self.selectionColor];
                 }
-                else {
-                    [self drawRoundedRectangle:rect.frame toContext:&context];
-                }
                 
                 attrs = attributesWhite;
-            } else if (type == CalendarViewTypeDay &&
+            } else if ((type == CalendarViewTypeYear && (rect.value >= startRangeYear && rect.value <= endRangeYear)) || (endRangeYear == 0 && (type == CalendarViewTypeYear && rect.value == startRangeYear))) {
+                [self drawRoundedRectangle:rect.frame toContext:&context];
+                attrs = attributesWhite;
+            } else if ((type == CalendarViewTypeMonth && (rect.value >= startRangeMonth && rect.value <= endRangeMonth)) || (endRangeMonth == 0 && (type == CalendarViewTypeMonth && rect.value == startRangeMonth))) {
+                [self drawRoundedRectangle:rect.frame toContext:&context];
+                attrs = attributesWhite;
+             } else if ((startRangeDay == 0 && rect.value == currentValue && self.shouldMarkSelectedDate) ||
+                        (rect.value == startRangeDay && currentMonth == startRangeMonth && currentYear == startRangeYear && type == CalendarViewTypeDay)) {
+                 if (type == CalendarViewTypeDay) {
+                     [self drawCircle:rect.frame toContext:&context withColor:self.selectionColor];
+                 }
+                 else {
+                     [self drawRoundedRectangle:rect.frame toContext:&context];
+                 }
+                 
+                 attrs = attributesWhite;
+             } else if (type == CalendarViewTypeDay &&
                        rect.value == todayDay &&
                        currentMonth == todayMonth &&
                        currentYear == todayYear &&
                        self.shouldMarkToday) {
                 [self drawCircle:rect.frame toContext:&context withColor:self.todayColor];
                 attrs = attributesWhite;
-            }
-            else {
+             } else if (type == CalendarViewTypeMonth) {
+                 attrs = attributesBlack;
+             } else {
                 attrs = attributesBlack;
             }
             
@@ -716,6 +775,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             }
             [rect.str drawUsingRect:rectText withAttributes:attrs];
         }
+    }
+    if ((startRangeDay > 0 && startRangeMonth > 0 && startRangeYear > 0) &&
+        (endRangeDay > 0 && endRangeMonth > 0 && endRangeYear > 0)) {
+        startRangeDay = 0;
+        startRangeMonth = 0;
+        startRangeYear = 0;
+        
+        endRangeDay = 0;
+        endRangeMonth = 0;
+        endRangeYear = 0;
     }
 }
 
@@ -804,6 +873,14 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	}
     if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:withType:withEvent:)]) {
         [_calendarDelegate didChangeCalendarDate:currentDate withType:type withEvent:event];
+    }
+}
+
+#pragma mark - Select range of calendar
+
+- (void) selectRangeOfCalendar{
+    if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didSelectRangeForStartDate:andEndDate:)]) {
+        [_calendarDelegate didSelectRangeForStartDate:startDate andEndDate:endDate];
     }
 }
 
@@ -1010,17 +1087,103 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
-#pragma mark - Additional functions
+- (void) longPress:(UILongPressGestureRecognizer *) press{
+    //TODO: create start rect and with another tap select the end section
+    NSSet *key = [press valueForKey:@"activeTouches"];
+    if (key.count == 0) {
+        return;
+    }
 
-- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value
-{
-    for (CalendarViewRect *rect in array) {
-        if (CGRectContainsPoint(rect.frame, point)) {
-            *value = rect.value;
-            return YES;
+    NSInteger day = 0;
+    CGPoint touchPoint = [press locationInView:self];
+
+    CalendarViewRect *rectWasTapped = nil;
+
+    if (type == CalendarViewTypeYear){
+        rectWasTapped = [self checkPoint:touchPoint inArray:yearRects];
+        if (startRangeYear == 0) {
+            startRangeDay = 1;
+            startRangeMonth = 1;
+            startRangeYear = rectWasTapped.value;
+        } else {
+            endRangeMonth = 12;
+            if (startRangeYear > rectWasTapped.value) {
+                endRangeYear = startRangeDay;
+                startRangeYear = rectWasTapped.value;
+            } else {
+                endRangeYear = rectWasTapped.value;
+            }
+            endRangeDay = [self getLastDayOfMonth:endRangeMonth year:endRangeYear];
+        }
+    } else if (type == CalendarViewTypeMonth) {
+        rectWasTapped = [self checkPoint:touchPoint inArray:monthRects];
+
+        if (startRangeMonth == 0) {
+            startRangeDay = 1;
+            startRangeMonth = rectWasTapped.value;
+            startRangeYear = currentYear;
+        } else {
+            endRangeYear = currentYear;
+            if (startRangeMonth > rectWasTapped.value) {
+                endRangeMonth = startRangeMonth;
+                startRangeMonth = rectWasTapped.value;
+            } else {
+                endRangeMonth = rectWasTapped.value;
+            }
+            endRangeDay = [self getLastDayOfMonth:endRangeMonth year:endRangeYear];
+        }
+    } else if (type == CalendarViewTypeDay) {
+        rectWasTapped = [self checkPoint:touchPoint inArray:dayRects];
+        if (rectWasTapped) {
+            day = rectWasTapped.value;
+            if (startRangeDay == 0 && startRangeMonth == 0 && startRangeYear == 0) {
+                startRangeDay = day;
+                startRangeMonth = currentMonth;
+                startRangeYear = currentYear;
+            } else {
+                if (day > startRangeDay && currentMonth >= startRangeMonth && currentYear >= startRangeYear) {
+                    endRangeDay = day;
+                    endRangeMonth = currentMonth;
+                    endRangeYear = currentYear;
+                } else {
+                    endRangeDay = startRangeDay;
+                    endRangeMonth = startRangeMonth;
+                    endRangeYear = startRangeYear;
+                    
+                    startRangeDay = day;
+                    startRangeMonth = currentMonth;
+                    startRangeYear = currentYear;
+                }
+            }
         }
     }
-    return NO;
+    
+    startDate = [self generateDateWithDay:startRangeDay month:startRangeMonth year:startRangeYear];
+    if (endRangeYear > 0) {
+        endDate = [self generateDateWithDay:endRangeDay month:endRangeMonth year:endRangeYear];
+    }
+    
+    [self selectRangeOfCalendar];
+    [self setNeedsDisplay];
+}
+#pragma mark - Additional functions
+
+- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value{
+    CalendarViewRect *rect = [self checkPoint:point inArray:array];
+    if (!rect) {
+        return NO;
+    }
+    *value = rect.value;
+    return YES;
+}
+
+- (CalendarViewRect *)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array{
+    for (CalendarViewRect *rect in array) {
+        if (CGRectContainsPoint(rect.frame, point)) {
+            return rect;
+        }
+    }
+    return nil;
 }
 
 - (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment

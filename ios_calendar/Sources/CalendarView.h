@@ -52,6 +52,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 @optional
 - (void)didChangeCalendarDate:(NSDate *)date withType:(NSInteger)type withEvent:(NSInteger)event;
 - (void)didDoubleTapCalendar:(NSDate *)date withType:(NSInteger)type;
+- (void)didSelectRangeForStartDate:(NSDate *) startDate andEndDate:(NSDate *) endDate;
 
 @end
 
@@ -60,7 +61,7 @@ typedef NS_ENUM(NSInteger, CalendarEvent)
 - (instancetype)initWithPosition:(CGFloat)x y:(CGFloat)y;
 - (void)setMode:(NSInteger)m;
 - (void)refresh;
-- (void)reload;
+- (void)goToToday;
 - (void)advanceCalendarContents;
 - (void)rewindCalendarContents;
 
