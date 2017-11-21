@@ -1063,6 +1063,85 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     }
 }
 
+- (void) longPress:(UILongPressGestureRecognizer *) press{
+    //TODO: create start rect and with another tap select the end section
+    NSSet *key = [press valueForKey:@"activeTouches"];
+    if (key.count == 0) {
+        return;
+    }
+
+    NSInteger day = 0;
+    CGPoint touchPoint = [press locationInView:self];
+
+    CalendarViewRect *rectWasTapped = nil;
+
+    if (type == CalendarViewTypeYear){
+        rectWasTapped = [self checkPoint:touchPoint inArray:yearRects];
+        if (startRangeYear == 0) {
+            startRangeDay = 1;
+            startRangeMonth = 1;
+            startRangeYear = rectWasTapped.value;
+        } else {
+            endRangeMonth = 12;
+            if (startRangeYear > rectWasTapped.value) {
+                endRangeYear = startRangeDay;
+                startRangeYear = rectWasTapped.value;
+            } else {
+                endRangeYear = rectWasTapped.value;
+            }
+            endRangeDay = [self getLastDayOfMonth:endRangeMonth year:endRangeYear];
+        }
+    } else if (type == CalendarViewTypeMonth) {
+        rectWasTapped = [self checkPoint:touchPoint inArray:monthRects];
+
+        if (startRangeMonth == 0) {
+            startRangeDay = 1;
+            startRangeMonth = rectWasTapped.value;
+            startRangeYear = currentYear;
+        } else {
+            endRangeYear = currentYear;
+            if (startRangeMonth > rectWasTapped.value) {
+                endRangeMonth = startRangeMonth;
+                startRangeMonth = rectWasTapped.value;
+            } else {
+                endRangeMonth = rectWasTapped.value;
+            }
+            endRangeDay = [self getLastDayOfMonth:endRangeMonth year:endRangeYear];
+        }
+    } else if (type == CalendarViewTypeDay) {
+        rectWasTapped = [self checkPoint:touchPoint inArray:dayRects];
+        if (rectWasTapped) {
+            day = rectWasTapped.value;
+            if (startRangeDay == 0 && startRangeMonth == 0 && startRangeYear == 0) {
+                startRangeDay = day;
+                startRangeMonth = currentMonth;
+                startRangeYear = currentYear;
+            } else {
+                if (day > startRangeDay && currentMonth >= startRangeMonth && currentYear >= startRangeYear) {
+                    endRangeDay = day;
+                    endRangeMonth = currentMonth;
+                    endRangeYear = currentYear;
+                } else {
+                    endRangeDay = startRangeDay;
+                    endRangeMonth = startRangeMonth;
+                    endRangeYear = startRangeYear;
+                    
+                    startRangeDay = day;
+                    startRangeMonth = currentMonth;
+                    startRangeYear = currentYear;
+                }
+            }
+        }
+    }
+    
+    startDate = [self generateDateWithDay:startRangeDay month:startRangeMonth year:startRangeYear];
+    if (endRangeYear > 0) {
+        endDate = [self generateDateWithDay:endRangeDay month:endRangeMonth year:endRangeYear];
+    }
+    
+    [self selectRangeOfCalendar];
+    [self setNeedsDisplay];
+}
 #pragma mark - Additional functions
 
 - (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value{
