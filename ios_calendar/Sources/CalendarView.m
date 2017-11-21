@@ -416,23 +416,15 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 - (void)generateDayRects
 {
 	[dayRects removeAllObjects];
-	
-	NSDate *now = [NSDate date];
-	NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
-	NSDateComponents *components = [calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:now];
-	[components setYear:currentYear];
-	[components setMonth:currentMonth];
-	[components setDay:1];  // set first day of month
-	
-    NSDate *currentDate = [calendar dateFromComponents:components];
-	NSUInteger lastDayOfMonth = [currentDate getLastDayOfMonthForCalendar:calendar];
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:self.calendarIdentifier];
+	NSUInteger lastDayOfMonth = [self getLastDayOfMonth:currentMonth year:currentYear];
     
     if (currentDay > lastDayOfMonth) {
         currentDay = lastDayOfMonth;
     }
     
-    [components setDay:currentDay];
-    currentDate = [calendar dateFromComponents:components];
+    NSDate *currentDate = [self generateDateWithDay:currentDay month:currentMonth year:currentYear];
     NSInteger weekday = [currentDate getWeekdayOfFirstDayOfMonthForCalendar:calendar];
 	
 	const CGFloat yOffSet = [self getEffectiveDaysYOffset];
@@ -679,7 +671,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 													 withColor:self.fontHeaderColor
 												 withAlignment:NSTextAlignmentFromCTTextAlignment(kCTLeftTextAlignment)];
     
-	CTFontRef cellFont = CTFontCreateWithName((CFStringRef)self.fontName, self.dayFontSize, NULL);
+	CTFontRef cellFont = CTFontCreateWithName((__bridge CFStringRef)self.fontName, self.dayFontSize, NULL);
 	CGRect cellFontBoundingBox = CTFontGetBoundingBox(cellFont);
 	CFRelease(cellFont);
     
@@ -857,6 +849,14 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 	}
     if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didChangeCalendarDate:withType:withEvent:)]) {
         [_calendarDelegate didChangeCalendarDate:currentDate withType:type withEvent:event];
+    }
+}
+
+#pragma mark - Select range of calendar
+
+- (void) selectRangeOfCalendar{
+    if (_calendarDelegate && [_calendarDelegate respondsToSelector:@selector(didSelectRangeForStartDate:andEndDate:)]) {
+        [_calendarDelegate didSelectRangeForStartDate:startDate andEndDate:endDate];
     }
 }
 
