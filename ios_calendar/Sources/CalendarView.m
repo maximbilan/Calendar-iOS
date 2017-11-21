@@ -391,6 +391,18 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     return components;
 }
 
+- (NSDate *) generateDateWithDay:(NSInteger) day month:(NSInteger) month year:(NSInteger) year{
+    NSDateComponents *components = [self generateDateComponents];
+    
+    [components setYear:year];
+    [components setMonth:month];
+    [components setDay:day];
+    [components setHour:0];
+    [components setMinute:0];
+    [components setSecond:0];
+    
+    return [components.calendar dateFromComponents:components];
+}
 #pragma mark - Generating of rects
 
 - (void)generateDayRects
