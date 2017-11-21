@@ -42,4 +42,8 @@
     NSLog(@"didDoubleTapCalendar:%@ withType:%ld", date, (long)type);
 }
 
+- (void) didSelectRangeForStartDate:(NSDate *)startDate andEndDate:(NSDate *)endDate{
+    NSLog(@"%s: start date :%@ \n end date : %@",__PRETTY_FUNCTION__,startDate,endDate);
+}
+
 @end
