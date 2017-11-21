@@ -83,6 +83,18 @@ if you set <i>useVeryShortWeekdaySymbols property</i> to `YES`, use days of week
 <pre>
 self.calendarView.useVeryShortWeekdaySymbols = YES;
 </pre>
+
+## How to select range of date
+![English range selection](https://raw.githubusercontent.com/Husseinhj/ios_calendar/feat/range_selection/img/@2x-English%20selection.png)
+![Persian range selection](https://raw.githubusercontent.com/Husseinhj/ios_calendar/feat/range_selection/img/@2x-Persian%20selection.png)
+If user Long press on items, can select date and for select end of range, Long press on end date.
+For get range date use `didSelectRangeForStartDate:endDate` delegate method like this :
+<pre>
+- (void) didSelectRangeForStartDate:(NSDate *)startDate andEndDate:(NSDate *)endDate{ 
+    NSLog(@"%s: start date :%@ \n end date : %@",__PRETTY_FUNCTION__,startDate,endDate); 
+} 
+</pre>
+
 ## How to handle changing date event
 For this you should use <i>CalendarViewDelegate</i> protocol:
 <pre>
