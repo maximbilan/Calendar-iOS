@@ -76,6 +76,19 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     CGRect yearTitleRect;
     CGRect monthTitleRect;
+    
+    // Range selection properties
+    NSInteger startRangeDay;
+    NSInteger startRangeMonth;
+    NSInteger startRangeYear;
+    CalendarViewRect *startRangeDayRect;
+    NSDate *startDate;
+    
+    NSInteger endRangeDay;
+    NSInteger endRangeMonth;
+    NSInteger endRangeYear;
+    CalendarViewRect *endRangeDayRect;
+    NSDate *endDate;
 }
 
 @property (nonatomic, strong) NSCalendarIdentifier calendarId;
@@ -216,6 +229,13 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
     [self addGestureRecognizer:doubleTap];
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                            action:@selector(longPress:)];
+//    longPress.numberOfTapsRequired = 1;
+    longPress.numberOfTouchesRequired = 1;
+    longPress.minimumPressDuration = 0.2f;
+    [self addGestureRecognizer:longPress];
 }
 
 - (void)setup
