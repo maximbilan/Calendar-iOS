@@ -1065,15 +1065,22 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 #pragma mark - Additional functions
 
-- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value
-{
+- (BOOL)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array andSetValue:(NSInteger *)value{
+    CalendarViewRect *rect = [self checkPoint:point inArray:array];
+    if (!rect) {
+        return NO;
+    }
+    *value = rect.value;
+    return YES;
+}
+
+- (CalendarViewRect *)checkPoint:(CGPoint)point inArray:(NSMutableArray *)array{
     for (CalendarViewRect *rect in array) {
         if (CGRectContainsPoint(rect.frame, point)) {
-            *value = rect.value;
-            return YES;
+            return rect;
         }
     }
-    return NO;
+    return nil;
 }
 
 - (NSDictionary *)generateAttributes:(NSString *)fontName withFontSize:(CGFloat)fontSize withColor:(UIColor *)color withAlignment:(NSTextAlignment)textAlignment
