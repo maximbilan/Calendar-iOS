@@ -731,28 +731,42 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
     
     if (rects) {
         for (CalendarViewRect *rect in rects) {
-            NSDictionary *attrs = nil;
+            NSDictionary *attrs = attributesBlack;
             CGRect rectText = rect.frame;
             rectText.origin.y = rectText.origin.y + ((CGRectGetHeight(rectText) - CGRectGetHeight(cellFontBoundingBox)) * 0.5);
             
-            if (rect.value == currentValue && self.shouldMarkSelectedDate) {
+            if (type == CalendarViewTypeDay && (((rect.value >= startRangeDay && rect.value <= endRangeDay) && currentMonth >= startRangeMonth && currentYear >= startRangeYear) || ((rect.value >= startRangeDay && rect.value <= endRangeDay) && currentMonth <= endRangeMonth && currentYear <= endRangeYear))) {
                 if (type == CalendarViewTypeDay) {
                     [self drawCircle:rect.frame toContext:&context withColor:self.selectionColor];
                 }
-                else {
-                    [self drawRoundedRectangle:rect.frame toContext:&context];
-                }
                 
                 attrs = attributesWhite;
-            } else if (type == CalendarViewTypeDay &&
+            } else if ((type == CalendarViewTypeYear && (rect.value >= startRangeYear && rect.value <= endRangeYear)) || (endRangeYear == 0 && (type == CalendarViewTypeYear && rect.value == startRangeYear))) {
+                [self drawRoundedRectangle:rect.frame toContext:&context];
+                attrs = attributesWhite;
+            } else if ((type == CalendarViewTypeMonth && (rect.value >= startRangeMonth && rect.value <= endRangeMonth)) || (endRangeMonth == 0 && (type == CalendarViewTypeMonth && rect.value == startRangeMonth))) {
+                [self drawRoundedRectangle:rect.frame toContext:&context];
+                attrs = attributesWhite;
+             } else if ((startRangeDay == 0 && rect.value == currentValue && self.shouldMarkSelectedDate) ||
+                        (rect.value == startRangeDay && currentMonth == startRangeMonth && currentYear == startRangeYear && type == CalendarViewTypeDay)) {
+                 if (type == CalendarViewTypeDay) {
+                     [self drawCircle:rect.frame toContext:&context withColor:self.selectionColor];
+                 }
+                 else {
+                     [self drawRoundedRectangle:rect.frame toContext:&context];
+                 }
+                 
+                 attrs = attributesWhite;
+             } else if (type == CalendarViewTypeDay &&
                        rect.value == todayDay &&
                        currentMonth == todayMonth &&
                        currentYear == todayYear &&
                        self.shouldMarkToday) {
                 [self drawCircle:rect.frame toContext:&context withColor:self.todayColor];
                 attrs = attributesWhite;
-            }
-            else {
+             } else if (type == CalendarViewTypeMonth) {
+                 attrs = attributesBlack;
+             } else {
                 attrs = attributesBlack;
             }
             
@@ -761,6 +775,16 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
             }
             [rect.str drawUsingRect:rectText withAttributes:attrs];
         }
+    }
+    if ((startRangeDay > 0 && startRangeMonth > 0 && startRangeYear > 0) &&
+        (endRangeDay > 0 && endRangeMonth > 0 && endRangeYear > 0)) {
+        startRangeDay = 0;
+        startRangeMonth = 0;
+        startRangeYear = 0;
+        
+        endRangeDay = 0;
+        endRangeMonth = 0;
+        endRangeYear = 0;
     }
 }
 
