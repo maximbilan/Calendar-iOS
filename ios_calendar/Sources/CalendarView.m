@@ -128,6 +128,7 @@ static const NSTimeInterval kCalendarViewSwipeMonthFadeOutTime = 0.6;
 
 @end
 
+IB_DESIGNABLE
 @implementation CalendarView
 
 @synthesize currentDate = _currentDate;
